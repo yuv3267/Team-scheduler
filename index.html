@@ -110,6 +110,21 @@ tr:hover td{background:var(--s2)}
 .wbtns button{flex:1;padding:10px;border-radius:8px;border:none;font-family:'Rubik',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
 .wok{background:var(--re);color:#fff}.wno{background:var(--s2);color:var(--tx);border:1px solid var(--br)!important}
 @media(max-width:480px){.ddr{grid-template-columns:1fr}}
+/* modals shared */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:400;padding:20px}
+.modal.on{display:flex}
+.mbox{background:var(--s1);border:1px solid var(--br);border-radius:14px;padding:22px;max-width:340px;width:100%}
+.mbox h3{font-size:15px;font-weight:700;margin-bottom:14px}
+.mbox .fi{margin-bottom:10px}
+.mbox-btns{display:flex;gap:8px;margin-top:16px}
+.mbox-btns button{flex:1;padding:10px;border-radius:8px;border:none;font-family:'Rubik',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.mbtn-ok{background:var(--ac);color:#fff}
+.mbtn-del{background:var(--re);color:#fff}
+.mbtn-can{background:var(--s2);color:var(--tx);border:1px solid var(--br)!important}
+/* delete btn in member card */
+.del-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--re);background:transparent;color:var(--re);font-family:'Rubik',sans-serif;font-size:11px;cursor:pointer;margin-right:auto}
+/* upgrade admin in user chip area */
+.upg-btn{padding:4px 9px;border-radius:7px;border:1px solid var(--ye);background:rgba(243,156,18,.12);color:var(--ye);font-family:'Rubik',sans-serif;font-size:11px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -168,6 +183,7 @@ tr:hover td{background:var(--s2)}
         <div class="uav" id="UAV" style="background:var(--ac)">?</div>
         <span id="UN">אורח</span>
       </div>
+      <button class="upg-btn" id="upgBtn" onclick="openUpgrade()" style="display:none">👑 אדמין</button>
     </div>
   </header>
   <nav>
@@ -228,6 +244,54 @@ tr:hover td{background:var(--s2)}
     </div>
   </div>
 </div>
+<!-- Profile edit modal -->
+<div class="modal" id="PM">
+  <div class="mbox">
+    <h3>✏️ עריכת פרופיל</h3>
+    <div class="fi"><label>שם מלא</label><input id="pn" type="text"></div>
+    <div class="fi"><label>טלפון</label><input id="pp" type="text" inputmode="tel"></div>
+    <div class="fi">
+      <label>תפקיד</label>
+      <div class="rgrid">
+        <button id="prb0" onclick="pickEditRole('חובש',0)">חובש</button>
+        <button id="prb1" onclick="pickEditRole('מנא',1)">מנא</button>
+        <button id="prb2" onclick="pickEditRole('מטב',2)">מטב</button>
+      </div>
+    </div>
+    <div class="mbox-btns">
+      <button class="mbtn-can" onclick="closeModal('PM')">ביטול</button>
+      <button class="mbtn-ok" onclick="saveProfile()">💾 שמור</button>
+    </div>
+    <div style="margin-top:10px;text-align:center">
+      <button style="background:transparent;border:none;color:var(--re);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer" onclick="confirmLogout()">🚪 התנתק מהמשתמש</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upgrade to admin modal -->
+<div class="modal" id="UM">
+  <div class="mbox">
+    <h3>👑 שדרוג לאדמין</h3>
+    <div class="fi"><label>קוד אדמין</label><input id="ucode" type="text" inputmode="numeric" placeholder="הזן קוד"></div>
+    <div class="mbox-btns">
+      <button class="mbtn-can" onclick="closeModal('UM')">ביטול</button>
+      <button class="mbtn-ok" onclick="doUpgrade()">אשר</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm delete modal -->
+<div class="modal" id="DM">
+  <div class="mbox" style="border-color:var(--re)">
+    <h3 style="color:var(--re)">🗑️ מחיקת משתמש</h3>
+    <p id="DMT" style="font-size:13px;color:var(--mu);margin-bottom:16px"></p>
+    <div class="mbox-btns">
+      <button class="mbtn-can" onclick="closeModal('DM')">ביטול</button>
+      <button class="mbtn-del" onclick="doDelete()">מחק</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="T"></div>
 
 <script>
@@ -395,6 +459,12 @@ function startApp(){
   document.getElementById('WB').textContent=(su.getDate()+'/'+(su.getMonth()+1))+' – '+(sa.getDate()+'/'+(sa.getMonth()+1));
   document.getElementById('nt1').style.display=isAdmin()?'':'none';
   document.getElementById('nt2').style.display=isAdmin()?'':'none';
+  // show upgrade button only for non-admin logged in users
+  var upgBtn=document.getElementById('upgBtn');
+  upgBtn.style.display=(!G.me.guest&&!isAdmin())?'':'none';
+  // clicking user chip opens profile (not logout)
+  var uch=document.getElementById('UN').parentElement;
+  uch.onclick=G.me.guest?doLogout:openProfile;
   listenFirebase();
   goTab(0);
 }
@@ -547,15 +617,84 @@ function renderMeT(){
   document.getElementById('meB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';
 }
 
+// ── PROFILE & ADMIN UPGRADE ──
+var editRole = '';
+function openProfile() {
+  var m = G.members[G.me.uid]; if(!m) return;
+  document.getElementById('pn').value = m.name;
+  document.getElementById('pp').value = m.phone;
+  editRole = m.role;
+  for(var j=0;j<3;j++) document.getElementById('prb'+j).classList.remove('on');
+  var ri = {חובש:0,מנא:1,מטב:2}[m.role];
+  if(ri!==undefined) document.getElementById('prb'+ri).classList.add('on');
+  document.getElementById('PM').classList.add('on');
+}
+function pickEditRole(r,i){
+  editRole=r;
+  for(var j=0;j<3;j++) document.getElementById('prb'+j).classList.remove('on');
+  document.getElementById('prb'+i).classList.add('on');
+}
+function saveProfile(){
+  var n=document.getElementById('pn').value.trim();
+  var p=document.getElementById('pp').value.trim();
+  if(!n||!p||!editRole){toast('יש למלא את כל השדות','#e74c3c');return;}
+  var uid=G.me.uid;
+  G.members[uid].name=n; G.members[uid].phone=p; G.members[uid].role=editRole;
+  G.me.name=n; G.me.role=editRole;
+  fbSet('members/'+uid,G.members[uid],function(){
+    document.getElementById('UAV').textContent=n[0];
+    document.getElementById('UAV').style.background=RCOL[editRole]||'var(--mu)';
+    document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');
+    renderAll(); closeModal('PM'); toast('✓ פרופיל עודכן');
+  });
+}
+function openUpgrade(){document.getElementById('ucode').value='';document.getElementById('UM').classList.add('on');}
+function doUpgrade(){
+  if(document.getElementById('ucode').value.trim()!==ADMIN_CODE){toast('קוד שגוי','#e74c3c');return;}
+  if(!G.me||G.me.guest){toast('יש להתחבר תחילה','#e74c3c');return;}
+  G.members[G.me.uid].admin=true;
+  fbSet('members/'+G.me.uid+'/admin',true,function(){
+    document.getElementById('UN').textContent=G.me.name+' 👑';
+    document.getElementById('nt1').style.display='';
+    document.getElementById('nt2').style.display='';
+    document.getElementById('upgBtn').style.display='none';
+    closeModal('UM'); toast('✓ שודרגת לאדמין!');
+    renderAll();
+  });
+}
+var deleteUid = '';
+function confirmDelete(uid){
+  deleteUid=uid;
+  document.getElementById('DMT').textContent='האם למחוק את '+G.members[uid].name+'? פעולה זו אינה הפיכה.';
+  document.getElementById('DM').classList.add('on');
+}
+function doDelete(){
+  if(!deleteUid)return;
+  db.ref('members/'+deleteUid).remove();
+  db.ref('avail/'+deleteUid).remove();
+  delete G.members[deleteUid]; delete G.avail[deleteUid];
+  closeModal('DM'); renderAll(); toast('✓ משתמש נמחק');
+}
+function closeModal(id){document.getElementById(id).classList.remove('on');}
+function confirmLogout(){closeModal('PM');doLogout();}
+
 // ── MEMBERS ──
 function buildMG(){
   var g=document.getElementById('MG');if(!g)return;
   var ks=Object.keys(G.members);
-  g.innerHTML=ks.length?ks.map(function(uid){var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';
+  var admin=isAdmin();
+  g.innerHTML=ks.length?ks.map(function(uid){
+    var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';
+    var isSelf=uid===G.me.uid;
+    var actions='';
+    if(isSelf) actions='<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-family:\'Rubik\',sans-serif;font-size:11px;cursor:pointer" onclick="openProfile()">✏️ ערוך</button>';
+    if(admin&&!isSelf) actions+='<button class="del-btn" onclick="confirmDelete(\''+uid+'\')">🗑️ מחק</button>';
     return '<div class="mc"><div class="mav" style="background:'+col+'">'+m.name[0]+'</div>'
-      +'<div><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div>'
+      +'<div style="flex:1"><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div>'
       +'<div style="font-size:11px;color:var(--mu);margin-top:2px">'+m.phone+' · מ"א '+m.id+'</div>'
-      +'<span style="display:inline-block;margin-top:4px;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span></div></div>';
+      +'<div style="display:flex;align-items:center;gap:8px;margin-top:6px">'
+      +'<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span>'
+      +actions+'</div></div></div>';
   }).join(''):'<p style="color:var(--mu);text-align:center;padding:20px;font-size:13px">אין חברי צוות</p>';
 }
 
