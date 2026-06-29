@@ -756,10 +756,8 @@ function buildMySchedule(){
 }
 
 function exportToCalendar(){
-  // Get the Sunday of current week
   var now=new Date();
   var sunday=new Date(now);sunday.setDate(now.getDate()-now.getDay());sunday.setHours(0,0,0,0);
-
   var dayOffset={ראשון:0,שני:1,שלישי:2,רביעי:3,חמישי:4,שישי:5,שבת:6};
 
   var eventsToAdd=[];
@@ -775,54 +773,40 @@ function exportToCalendar(){
 
   if(!eventsToAdd.length){toast('אין אירועים להוסיף','#e74c3c');return;}
 
-  // Open each event in Google Calendar (one by one, user confirms each)
-  // For multiple events we open them sequentially
-  var opened=0;
-  function openNext(){
-    if(opened>=eventsToAdd.length){toast('✓ כל האירועים נשלחו ל-Google Calendar');return;}
-    var ev=eventsToAdd[opened];opened++;
-    var gcUrl=buildGcalUrl(ev);
-    window.open(gcUrl,'_blank');
-    // Small delay between opens to avoid popup blocker
-    if(opened<eventsToAdd.length){setTimeout(openNext,800);}
-    else{toast('✓ '+eventsToAdd.length+' אירועים נשלחו ל-Google Calendar');}
-  }
-  openNext();
-}
-
-function buildGcalUrl(ev){
-  var d=ev.date;
+  // Build ICS file
   function pad(n){return('0'+n).slice(-2);}
-  var dateStr=d.getFullYear()+''+pad(d.getMonth()+1)+''+pad(d.getDate());
-
-  var startStr,endStr;
-  if(ev.time){
-    // parse time range "08:00–10:00" or single "08:00"
-    var parts=ev.time.replace('–','-').split('-');
-    var t1=parts[0].trim().replace(':','');
-    var t2=parts[1]?parts[1].trim().replace(':',''):null;
-    // pad to 6 digits (HHMMSS)
-    while(t1.length<4)t1=t1+'0';t1=t1+'00';
-    startStr=dateStr+'T'+t1;
-    if(t2){while(t2.length<4)t2=t2+'0';t2=t2+'00';endStr=dateStr+'T'+t2;}
-    else{
-      // default 1 hour duration
-      var sh=parseInt(t1.slice(0,2)),sm=parseInt(t1.slice(2,4));
-      var eh=sh+1;
-      endStr=dateStr+'T'+pad(eh)+pad(sm)+'00';
-    }
-  } else {
-    // all day
-    startStr=dateStr;endStr=dateStr;
+  function parseTime(t){var m=t.replace(/[–\-]/g,'-').split('-');return{start:m[0].trim(),end:m[1]?m[1].trim():null};}
+  function toIcsDate(d,timeStr){
+    var base=d.getFullYear()+''+pad(d.getMonth()+1)+''+pad(d.getDate());
+    if(!timeStr)return{s:base,e:base,allday:true};
+    var parts=parseTime(timeStr);
+    var s=parts.start.replace(':','')+'00';
+    var e=parts.end?parts.end.replace(':','')+'00':null;
+    if(!e){var sh=parseInt(s.slice(0,2));e=pad(sh+1)+s.slice(2);}
+    return{s:base+'T'+s,e:base+'T'+e,allday:false};
   }
 
-  var params=new URLSearchParams({
-    action:'TEMPLATE',
-    text:ev.title,
-    dates:startStr+'/'+endStr,
-    details:ev.note||''
+  var lines=['BEGIN:VCALENDAR','VERSION:2.0','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-TIMEZONE:Asia/Jerusalem'];
+  eventsToAdd.forEach(function(ev,i){
+    var dt=toIcsDate(ev.date,ev.time);
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:'+Date.now()+i+'@team-sched');
+    lines.push('SUMMARY:'+ev.title.replace(/,/g,'\\,'));
+    if(dt.allday){lines.push('DTSTART;VALUE=DATE:'+dt.s);lines.push('DTEND;VALUE=DATE:'+dt.e);}
+    else{lines.push('DTSTART;TZID=Asia/Jerusalem:'+dt.s);lines.push('DTEND;TZID=Asia/Jerusalem:'+dt.e);}
+    if(ev.note)lines.push('DESCRIPTION:'+ev.note.replace(/,/g,'\\,'));
+    lines.push('END:VEVENT');
   });
-  return 'https://calendar.google.com/calendar/render?'+params.toString();
+  lines.push('END:VCALENDAR');
+
+  var ics=lines.join('\r\n');
+  var blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='לוז-שבועי.ics';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+  toast('✓ קובץ לוח שנה הורד — פתח אותו להוספה ל-Calendar');
 }
 
 // ── MY DUTY ──
