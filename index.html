@@ -267,9 +267,9 @@ tr:hover td{background:var(--s2)}
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <div class="ctitle" style="margin-bottom:0">לו"ז שבועי</div>
-          <div style="display:flex;gap:6px" id="schedAdminBtns" style="display:none">
+          <div id="schedAdminBtns" style="display:none;gap:6px;align-items:center">
             <button class="btn sm" onclick="openAddEvent()">+ הוסף</button>
-            <button class="btn sm ye" onclick="openParseModal()">📋 הדבק טקסט</button>
+            <button class="btn sm" style="background:var(--ac2)" onclick="openParseModal()">+++ הדבק טקסט</button>
           </div>
         </div>
         <div class="sched-wrap" id="SCHED"></div>
@@ -430,7 +430,14 @@ function pushNotif(text){var uid=G.me&&G.me.uid;if(!uid||G.me.guest)return;var n
 function broadcastNotif(text){var nid='n_'+Date.now();db.ref('notifs/'+nid).set({text:text,ts:Date.now(),read:false,uid:'all'});}
 
 function listen(){
-  db.ref('members').on('value',function(s){G.members=s.val()||{};renderAll();});
+  db.ref('members').on('value',function(s){
+    G.members=s.val()||{};
+    // update admin-dependent UI now that members are loaded
+    document.getElementById('nt2').style.display=isAdmin()?'':'none';
+    document.getElementById('schedAdminBtns').style.display=isAdmin()?'flex':'none';
+    document.getElementById('upgBtn').style.display=(!G.me||G.me.guest||isAdmin())?'none':'';
+    renderAll();
+  });
   db.ref('avail').on('value',function(s){G.avail=s.val()||{};renderAll();});
   db.ref('duty').on('value',function(s){G.duty=s.val()||{};renderAll();});
   db.ref('medic').on('value',function(s){G.medic=s.val()||{};renderAll();});
@@ -488,8 +495,8 @@ function startApp(){
   document.getElementById('UN').textContent=(G.me.guest?'אורח':G.me.name)+(isAdmin()?' 👑':'');
   document.getElementById('UCH').onclick=G.me.guest?doLogout:openProfile;
   document.getElementById('upgBtn').style.display=(!G.me.guest&&!isAdmin())?'':'none';
-  // admin-only tabs
-  document.getElementById('nt2').style.display=isAdmin()?'':'none';
+  // admin-only: שיבוץ tab — show once members loaded
+  document.getElementById('nt2').style.display='none'; // hidden until listen() confirms admin
   // week badge
   var n=new Date(),su=new Date(n);su.setDate(n.getDate()-n.getDay());var sa=new Date(su);sa.setDate(su.getDate()+6);
   document.getElementById('WB').textContent=(su.getDate()+'/'+(su.getMonth()+1))+' – '+(sa.getDate()+'/'+(sa.getMonth()+1));
