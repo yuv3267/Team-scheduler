@@ -11,21 +11,22 @@
 :root{--bg:#0f1117;--s1:#1a1d27;--s2:#222535;--br:#2e3248;--ac:#4f8ef7;--ac2:#7c5cbf;--gr:#2ecc71;--ye:#f39c12;--re:#e74c3c;--tx:#e8eaf0;--mu:#7880a0}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Rubik',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+/* AUTH */
 #AUTH{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .ac{background:var(--s1);border:1px solid var(--br);border-radius:16px;padding:28px;width:100%;max-width:380px}
 .al{width:46px;height:46px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px}
-h2.at{text-align:center;font-size:19px;font-weight:700;margin-bottom:3px}
-p.as{text-align:center;font-size:12px;color:var(--mu);margin-bottom:20px}
-.tabs{display:flex;gap:3px;background:var(--s2);border-radius:9px;padding:3px;margin-bottom:18px}
-.tabs button{flex:1;padding:7px;border-radius:7px;border:none;background:transparent;color:var(--mu);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer;font-weight:500}
-.tabs button.on{background:var(--ac);color:#fff}
+.at{text-align:center;font-size:19px;font-weight:700;margin-bottom:3px}
+.as{text-align:center;font-size:12px;color:var(--mu);margin-bottom:20px}
+.atabs{display:flex;gap:3px;background:var(--s2);border-radius:9px;padding:3px;margin-bottom:18px}
+.atabs button{flex:1;padding:7px;border-radius:7px;border:none;background:transparent;color:var(--mu);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer;font-weight:500}
+.atabs button.on{background:var(--ac);color:#fff}
 .aform{display:none}.aform.on{display:block}
 .fi{margin-bottom:12px}
-.fi label{font-size:11px;color:var(--mu);display:block;margin-bottom:4px;font-weight:600}
+.fi label{font-size:11px;color:var(--mu);display:block;margin-bottom:4px;font-weight:600;letter-spacing:.04em}
 .fi input,.fi select,.fi textarea{width:100%;background:var(--bg);border:1px solid var(--br);border-radius:8px;color:var(--tx);font-family:'Rubik',sans-serif;font-size:14px;padding:9px 11px;outline:none}
 .fi input:focus,.fi select:focus,.fi textarea:focus{border-color:var(--ac)}
 .fi select option{background:var(--s2)}
-.fi textarea{resize:vertical;min-height:60px}
+.fi textarea{resize:vertical;min-height:80px;font-size:13px}
 .rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:4px}
 .rgrid button{padding:12px 4px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:14px;cursor:pointer;font-weight:600}
 .rgrid button.on{border-color:var(--ac);background:rgba(79,142,247,.2);color:var(--tx)}
@@ -34,6 +35,7 @@ p.as{text-align:center;font-size:12px;color:var(--mu);margin-bottom:20px}
 .admin-row input{flex:1;background:var(--bg);border:1px solid var(--br);border-radius:8px;color:var(--tx);font-family:'Rubik',sans-serif;font-size:13px;padding:8px 11px;outline:none}
 .admin-row button{padding:8px 14px;border-radius:8px;border:1px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap}
 .admin-row button.on{border-color:var(--ye);background:rgba(243,156,18,.15);color:var(--ye)}
+/* APP */
 #APP{display:none}
 .ov{position:fixed;inset:0;background:rgba(15,17,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:200;font-size:13px;color:var(--mu)}
 .sp{width:30px;height:30px;border:3px solid var(--br);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite}
@@ -44,7 +46,7 @@ header h1{font-size:15px;font-weight:600}
 .hr{margin-right:auto;display:flex;align-items:center;gap:7px}
 .wb{background:var(--s2);border:1px solid var(--br);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--mu)}
 .spill{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 9px;border-radius:7px;border:1px solid var(--br);background:var(--s2);color:var(--mu)}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--mu)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--mu);flex-shrink:0}
 .sdot.ok{background:var(--gr)}.sdot.sy{background:var(--ye);animation:pu .8s infinite}.sdot.er{background:var(--re)}
 @keyframes pu{0%,100%{opacity:1}50%{opacity:.2}}
 .uch{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--br);border-radius:7px;padding:4px 9px;font-size:12px;cursor:pointer}
@@ -56,99 +58,120 @@ nav button.on{background:var(--ac);color:#fff}
 main{padding:14px;max-width:1100px;margin:0 auto}
 .panel{display:none}.panel.on{display:block}
 .card{background:var(--s1);border:1px solid var(--br);border-radius:12px;padding:15px;margin-bottom:14px}
-.ct{font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.ctitle{font-size:11px;font-weight:600;color:var(--mu);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
 .btn{background:var(--ac);color:#fff;border:none;border-radius:7px;padding:9px 18px;font-family:'Rubik',sans-serif;font-size:13px;font-weight:500;cursor:pointer}
 .btn.sec{background:var(--s2);color:var(--tx);border:1px solid var(--br)}
 .btn.sm{padding:5px 12px;font-size:11px}
+.btn.ye{background:var(--ye)}
 .acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+/* AVAILABILITY */
 .ws{display:none}.ws.on{display:block}
 .wsh{display:flex;align-items:center;gap:9px;margin-bottom:14px}
 .wsn{width:28px;height:28px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
 .pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-bottom:11px}
 .pc{padding:9px 7px;border-radius:9px;border:2px solid var(--br);background:var(--s2);cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
 .pc.on{border-color:var(--ac);background:rgba(79,142,247,.15)}
-.cdot{width:9px;height:9px;border-radius:50%}
+.cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .dr{display:grid;grid-template-columns:85px 1fr;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--br)}
 .dr:last-child{border-bottom:none}
 .avbtns{display:flex;gap:6px;flex-wrap:wrap}
-.avbtn{padding:8px 14px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;font-weight:500;transition:all .12s}
-.avbtn:hover{border-color:var(--ac)}
+.avbtn{padding:8px 14px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;font-weight:500}
 .avbtn.sp{background:#1a3d28;border-color:var(--gr);color:var(--gr)}
 .avbtn.sx{background:#3d2e10;border-color:var(--ye);color:var(--ye)}
 .avbtn.sa{background:#3d2020;border-color:var(--re);color:var(--re)}
-.dd{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px}
-.ddh{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--br);color:var(--ac);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.mt-tag{font-size:10px;font-weight:400;background:var(--s1);border:1px solid var(--br);border-radius:4px;padding:2px 7px;color:var(--mu)}
-.edit-msn{font-size:10px;color:var(--ac);cursor:pointer;margin-right:4px;text-decoration:underline}
-.ddr{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+/* DUTY / MEDIC */
+.dday{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px}
+.ddayh{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--br);color:var(--ac);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.msntag{font-size:10px;font-weight:400;background:var(--s1);border:1px solid var(--br);border-radius:4px;padding:2px 7px;color:var(--mu)}
+.editmsn{font-size:10px;color:var(--ac);cursor:pointer;text-decoration:underline;margin-right:4px}
+.droles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .rl{font-size:11px;color:var(--mu);margin-bottom:4px;font-weight:600;text-transform:uppercase}
+/* PICKER */
 .mp{position:relative}
 .mdisp{width:100%;background:var(--bg);border:2px solid var(--br);border-radius:8px;color:var(--tx);font-family:'Rubik',sans-serif;font-size:13px;padding:8px 11px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:38px}
 .mdisp.fil{border-color:var(--ac)}
 .mdd{position:absolute;top:calc(100% + 4px);right:0;left:0;background:var(--s1);border:1px solid var(--br);border-radius:10px;z-index:50;display:none;max-height:220px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.6)}
 .mdd.on{display:block}
 .mo{padding:10px 13px;cursor:pointer;display:flex;align-items:center;gap:9px;font-size:13px}
-.mo:hover{background:var(--s2)}.mo.dis{opacity:.4;pointer-events:none}.mo.cl{color:var(--mu);font-style:italic}.mo.wn{cursor:pointer}
-.avdot{width:9px;height:9px;border-radius:50%}
+.mo:hover{background:var(--s2)}.mo.dis{opacity:.4;pointer-events:none}.mo.cl{color:var(--mu);font-style:italic}
+.avdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .mi{display:flex;flex-direction:column;flex:1}
 .mr{font-size:11px;color:var(--mu);margin-top:1px}
 .wb2{font-size:10px;background:rgba(231,76,60,.2);color:var(--re);border-radius:4px;padding:1px 6px;margin-top:2px;display:inline-block}
+/* TABLE */
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{background:var(--s2);color:var(--mu);font-weight:600;font-size:10px;padding:8px 9px;text-align:center;border:1px solid var(--br)}
 td{padding:8px 9px;border:1px solid var(--br);text-align:center}
 tr:hover td{background:var(--s2)}
 .b{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
 .bp{background:#1a3d28;color:var(--gr)}.ba{background:#3d2020;color:var(--re)}.bx{background:#3d2e10;color:var(--ye)}.be{color:var(--mu)}
+/* MEMBERS */
 .mg{display:grid;gap:9px}
 .mc{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:13px;display:flex;align-items:center;gap:11px}
-.mav{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.mav2{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
 .del-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--re);background:transparent;color:var(--re);font-family:'Rubik',sans-serif;font-size:11px;cursor:pointer}
+/* SCHEDULE */
+.sched-wrap{display:grid;gap:10px}
+.sday{background:var(--s2);border:1px solid var(--br);border-radius:10px;overflow:hidden}
+.sdayh{padding:10px 14px;font-size:13px;font-weight:600;color:var(--ac);border-bottom:1px solid var(--br);display:flex;justify-content:space-between;align-items:center}
+.sevents{padding:8px}
+.sev{border-radius:8px;padding:10px 12px;margin-bottom:6px;border-right:3px solid var(--ac);background:var(--s1);position:relative}
+.sev.mine{border-right-color:var(--gr);background:rgba(46,204,113,.07)}
+.sev.evall{border-right-color:var(--ye);background:rgba(243,156,18,.07)}
+.sev.changed{border-right-color:var(--ac2)}
+.ev-time{font-size:11px;color:var(--mu);margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.ev-changed-badge{font-size:9px;background:rgba(124,92,191,.25);color:var(--ac2);border-radius:4px;padding:1px 5px}
+.ev-title{font-size:13px;font-weight:600}
+.ev-users{font-size:11px;color:var(--mu);margin-top:3px}
+.ev-note{font-size:11px;color:var(--mu);margin-top:2px;font-style:italic}
+.ev-actions{display:flex;gap:6px;margin-top:6px}
+.ev-act{padding:3px 9px;border-radius:5px;border:1px solid var(--br);background:transparent;color:var(--mu);font-family:'Rubik',sans-serif;font-size:10px;cursor:pointer}
+.ev-act:hover{border-color:var(--ac);color:var(--tx)}
+.ev-act.red{border-color:var(--re);color:var(--re)}
+.sched-empty{font-size:12px;color:var(--mu);padding:10px 14px;text-align:center}
+/* PERSONAL */
+.pers-header{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s2);border-radius:12px;margin-bottom:14px;border:1px solid var(--br)}
+.pers-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.pers-name{font-size:16px;font-weight:700}
+.pers-role{font-size:12px;color:var(--mu);margin-top:2px}
+.notif-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--br);align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);flex-shrink:0;margin-top:4px}
+.notif-dot.read{background:var(--mu)}
+.notif-text{font-size:13px;flex:1}
+.notif-time{font-size:11px;color:var(--mu);white-space:nowrap}
+.duty-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:6px;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.3);font-size:12px;margin:3px}
 .sbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
 .sb2{background:var(--s1);border:1px solid var(--br);border-radius:9px;padding:11px 15px;min-width:105px}
 .sv{font-size:22px;font-weight:700;color:var(--ac)}.sl2{font-size:10px;color:var(--mu);margin-top:2px}
-/* Schedule */
-.sched-grid{display:grid;gap:10px}
-.sched-day{background:var(--s2);border:1px solid var(--br);border-radius:10px;overflow:hidden}
-.sched-day-hdr{padding:10px 14px;font-size:13px;font-weight:600;color:var(--ac);border-bottom:1px solid var(--br);display:flex;justify-content:space-between;align-items:center}
-.sched-events{padding:8px}
-.sched-event{border-radius:8px;padding:10px 12px;margin-bottom:6px;border-right:3px solid var(--ac);background:var(--s1);position:relative}
-.sched-event.mine{border-right-color:var(--gr);background:rgba(46,204,113,.08)}
-.sched-event.all{border-right-color:var(--ye);background:rgba(243,156,18,.08)}
-.sched-event .ev-time{font-size:11px;color:var(--mu);margin-bottom:3px}
-.sched-event .ev-title{font-size:13px;font-weight:600}
-.sched-event .ev-users{font-size:11px;color:var(--mu);margin-top:4px}
-.sched-event .ev-note{font-size:11px;color:var(--mu);margin-top:2px;font-style:italic}
-.sched-empty{font-size:12px;color:var(--mu);padding:8px 12px;text-align:center}
-.ev-del{position:absolute;top:8px;left:8px;background:transparent;border:none;color:var(--re);cursor:pointer;font-size:13px;padding:2px}
-/* modals */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:400;padding:20px}
-.modal.on{display:flex}
-.mbox{background:var(--s1);border:1px solid var(--br);border-radius:14px;padding:22px;max-width:360px;width:100%;max-height:90vh;overflow-y:auto}
-.mbox h3{font-size:15px;font-weight:700;margin-bottom:14px}
-.mbox .fi{margin-bottom:10px}
-.mbox-btns{display:flex;gap:8px;margin-top:16px}
-.mbox-btns button{flex:1;padding:10px;border-radius:8px;border:none;font-family:'Rubik',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
-.mbtn-ok{background:var(--ac);color:#fff}
-.mbtn-del{background:var(--re);color:#fff}
-.mbtn-can{background:var(--s2);color:var(--tx);border:1px solid var(--br)!important}
-/* user multi-select */
-.user-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+/* USER CHIPS */
+.uchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .uchip2{padding:5px 10px;border-radius:6px;border:1px solid var(--br);background:var(--s2);color:var(--mu);font-size:12px;cursor:pointer}
 .uchip2.on{border-color:var(--ac);background:rgba(79,142,247,.15);color:var(--tx)}
-.uchip2.all{border-color:var(--ye);background:rgba(243,156,18,.15);color:var(--ye)}
+.uchip2.all{border-color:var(--ye);color:var(--ye);background:rgba(243,156,18,.1)}
+/* MODALS */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:400;padding:16px}
+.modal.on{display:flex}
+.mbox{background:var(--s1);border:1px solid var(--br);border-radius:14px;padding:22px;max-width:380px;width:100%;max-height:90vh;overflow-y:auto}
+.mbox h3{font-size:15px;font-weight:700;margin-bottom:14px}
+.mbox .fi{margin-bottom:10px}
+.mbtns{display:flex;gap:8px;margin-top:16px}
+.mbtns button{flex:1;padding:10px;border-radius:8px;border:none;font-family:'Rubik',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.mbok{background:var(--ac);color:#fff}.mbdel{background:var(--re);color:#fff}.mbcan{background:var(--s2);color:var(--tx);border:1px solid var(--br)!important}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);color:#fff;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:500;transition:transform .3s;z-index:500;white-space:nowrap}
 .toast.on{transform:translateX(-50%) translateY(0)}
-@media(max-width:480px){.ddr{grid-template-columns:1fr}}
+@media(max-width:480px){.droles{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
+<!-- AUTH -->
 <div id="AUTH">
   <div class="ac">
     <div class="al">🛡</div>
-    <h2 class="at">מערכת שיבוץ צוות</h2>
-    <p class="as">כוננות · חובש תורן · נוכחות</p>
-    <div class="tabs">
+    <div class="at">מערכת שיבוץ צוות</div>
+    <div class="as">כוננות · חובש תורן · לו"ז</div>
+    <div class="atabs">
       <button class="on" id="tb0" onclick="showTab(0)">משתמש חדש</button>
       <button id="tb1" onclick="showTab(1)">כניסה</button>
       <button id="tb2" onclick="showTab(2)">אורח</button>
@@ -157,8 +180,7 @@ tr:hover td{background:var(--s2)}
       <div class="fi"><label>שם מלא</label><input id="rn" type="text" placeholder="ישראל ישראלי"></div>
       <div class="fi"><label>מספר אישי</label><input id="ri" type="text" inputmode="numeric" placeholder="1234567"></div>
       <div class="fi"><label>טלפון</label><input id="rp" type="text" inputmode="tel" placeholder="050-0000000"></div>
-      <div class="fi">
-        <label>תפקיד</label>
+      <div class="fi"><label>תפקיד</label>
         <div class="rgrid">
           <button id="rb0" onclick="pickRole('חובש',0)">חובש</button>
           <button id="rb1" onclick="pickRole('מנא',1)">מנא</button>
@@ -167,7 +189,7 @@ tr:hover td{background:var(--s2)}
       </div>
       <div class="admin-row">
         <input id="adminCode" type="text" placeholder="קוד אדמין (אם יש)" inputmode="numeric">
-        <button id="adminBtn" onclick="checkAdminCode()">👑 אדמין</button>
+        <button id="adminBtn" onclick="checkAdmin()">👑 אדמין</button>
       </div>
       <button class="abtn" onclick="doReg()">הצטרף לצוות</button>
     </div>
@@ -176,15 +198,16 @@ tr:hover td{background:var(--s2)}
       <button class="abtn" onclick="doLogin()">כניסה</button>
     </div>
     <div class="aform" id="f2">
-      <div style="text-align:center;padding:14px 0">
+      <div style="text-align:center;padding:16px 0">
         <div style="font-size:32px;margin-bottom:12px">👁</div>
-        <p style="font-size:13px;color:var(--mu);margin-bottom:20px">צפייה בלבד ללא פרופיל</p>
+        <p style="font-size:13px;color:var(--mu);margin-bottom:20px">צפייה ועריכה ללא פרופיל</p>
         <button class="abtn" onclick="doGuest()">כנס כאורח</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="APP">
   <div class="ov" id="OV"><div class="sp"></div><span>מתחבר...</span></div>
   <header>
@@ -193,33 +216,99 @@ tr:hover td{background:var(--s2)}
     <div class="hr">
       <div class="wb" id="WB">—</div>
       <div class="spill"><div class="sdot" id="SD"></div><span id="SL">...</span></div>
-      <div class="uch" id="UCH">
-        <div class="uav" id="UAV" style="background:var(--ac)">?</div>
-        <span id="UN">אורח</span>
-      </div>
-      <button class="upg-btn" id="upgBtn" onclick="openUpgrade()" style="display:none">👑 אדמין</button>
+      <div class="uch" id="UCH"><div class="uav" id="UAV" style="background:var(--ac)">?</div><span id="UN">אורח</span></div>
+      <button class="upg-btn" id="upgBtn" onclick="openModal('UM')" style="display:none">👑</button>
     </div>
   </header>
   <nav>
-    <button class="on" id="nt0" onclick="goTab(0)">📋 זמינות</button>
-    <button id="nt1" onclick="goTab(1)">🔰 כוננות</button>
-    <button id="nt2" onclick="goTab(2)">🩺 חובש תורן</button>
-    <button id="nt3" onclick="goTab(3)">📅 לו״ז יומי</button>
+    <button class="on" id="nt0" onclick="goTab(0)">🏠 אישי</button>
+    <button id="nt1" onclick="goTab(1)">📅 לו"ז</button>
+    <button id="nt2" onclick="goTab(2)">🔰 שיבוץ</button>
+    <button id="nt3" onclick="goTab(3)">📋 זמינות</button>
     <button id="nt4" onclick="goTab(4)">👥 צוות</button>
     <button id="nt5" onclick="goTab(5)">👁 הכל</button>
   </nav>
   <main>
-    <!-- AVAILABILITY -->
+    <!-- PERSONAL -->
     <div class="panel on" id="p0">
+      <div class="pers-header">
+        <div class="pers-avatar" id="persAv">?</div>
+        <div>
+          <div class="pers-name" id="persName">—</div>
+          <div class="pers-role" id="persRole">—</div>
+          <div style="margin-top:6px;display:flex;gap:6px">
+            <button class="btn sm" onclick="openProfile()">✏️ ערוך פרופיל</button>
+            <button class="btn sm sec" onclick="doLogout()">🚪 יציאה</button>
+          </div>
+        </div>
+      </div>
+      <!-- My schedule today -->
       <div class="card">
-        <div class="ct">עדכון זמינות</div>
-        <div class="ws on" id="ws0">
+        <div class="ctitle">לו"ז שלי לשבוע</div>
+        <div id="mySchedule"></div>
+      </div>
+      <!-- My duty -->
+      <div class="card">
+        <div class="ctitle">כוננות וחובש תורן שלי</div>
+        <div id="myDuty"></div>
+      </div>
+      <!-- Notifications -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div class="ctitle" style="margin-bottom:0">🔔 עדכונים</div>
+          <button class="btn sm sec" onclick="markAllRead()">סמן כנקרא</button>
+        </div>
+        <div id="notifList"></div>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="panel" id="p1">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div class="ctitle" style="margin-bottom:0">לו"ז שבועי</div>
+          <div style="display:flex;gap:6px" id="schedAdminBtns" style="display:none">
+            <button class="btn sm" onclick="openAddEvent()">+ הוסף</button>
+            <button class="btn sm ye" onclick="openParseModal()">📋 הדבק טקסט</button>
+          </div>
+        </div>
+        <div class="sched-wrap" id="SCHED"></div>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENT -->
+    <div class="panel" id="p2">
+      <div class="card">
+        <div class="ctitle">שיבוץ צוות כוננות</div>
+        <div id="DD"></div>
+        <div class="acts"><button class="btn" onclick="saveDu()">💾 שמור שיבוץ</button></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">שיבוץ חובש תורן שבועי</div>
+        <div id="MD"></div>
+        <div class="acts"><button class="btn" onclick="saveMe()">💾 שמור</button></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">סיכום כוננות</div>
+        <div style="overflow-x:auto"><table><thead><tr id="duH"></tr></thead><tbody id="duB"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ctitle">סיכום חובש תורן</div>
+        <div style="overflow-x:auto"><table><thead><tr id="meH"></tr></thead><tbody id="meB"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- AVAILABILITY -->
+    <div class="panel" id="p3">
+      <div class="card">
+        <div class="ctitle">עדכון זמינות</div>
+        <div class="ws on" id="av1">
           <div class="wsh"><div class="wsn">1</div><div style="font-size:14px;font-weight:600">בחר/י חבר צוות</div></div>
           <div class="pg" id="PG"></div>
           <div class="acts"><button class="btn" onclick="startAv()">המשך ←</button></div>
         </div>
-        <div class="ws" id="ws1">
-          <div class="wsh"><div class="wsn">2</div><div><div style="font-size:14px;font-weight:600">זמינות לכל יום</div><div id="AVL" style="font-size:12px;color:var(--mu);margin-top:2px"></div></div></div>
+        <div class="ws" id="av2">
+          <div class="wsh"><div class="wsn">2</div><div><div style="font-size:14px;font-weight:600">זמינות לכל יום</div><div id="AVL" style="font-size:12px;color:var(--mu)"></div></div></div>
           <div id="ADR"></div>
           <div class="acts">
             <button class="btn sec" onclick="backAv()">← חזור</button>
@@ -227,138 +316,84 @@ tr:hover td{background:var(--s2)}
           </div>
         </div>
       </div>
-      <div class="card"><div class="ct">טבלת זמינות</div><div style="overflow-x:auto"><table><thead><tr id="avH"></tr></thead><tbody id="avB"></tbody></table></div></div>
+      <div class="card"><div class="ctitle">טבלת זמינות</div><div style="overflow-x:auto"><table><thead><tr id="avH"></tr></thead><tbody id="avB"></tbody></table></div></div>
     </div>
-    <!-- DUTY -->
-    <div class="panel" id="p1">
-      <div class="card"><div class="ct">שיבוץ כוננות</div><div id="DD"></div><div class="acts"><button class="btn" onclick="saveDu()">💾 שמור שיבוץ</button></div></div>
-      <div class="card"><div class="ct">סיכום כוננות</div><div style="overflow-x:auto"><table><thead><tr id="duH"></tr></thead><tbody id="duB"></tbody></table></div></div>
-    </div>
-    <!-- MEDIC -->
-    <div class="panel" id="p2">
-      <div class="card"><div class="ct">שיבוץ חובש תורן</div><div id="MD"></div><div class="acts"><button class="btn" onclick="saveMe()">💾 שמור</button></div></div>
-      <div class="card"><div class="ct">חובש תורן</div><div style="overflow-x:auto"><table><thead><tr id="meH"></tr></thead><tbody id="meB"></tbody></table></div></div>
-    </div>
-    <!-- SCHEDULE -->
-    <div class="panel" id="p3">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div class="ct" style="margin-bottom:0">לו״ז יומי שבועי</div>
-          <button class="btn sm" id="addEvBtn" onclick="openAddEvent()" style="display:none">+ הוסף אירוע</button>
-        </div>
-        <div class="sched-grid" id="SCHED"></div>
-      </div>
-    </div>
+
     <!-- MEMBERS -->
     <div class="panel" id="p4">
-      <div class="card"><div class="ct">חברי הצוות</div><div class="mg" id="MG"></div></div>
+      <div class="card"><div class="ctitle">חברי הצוות</div><div class="mg" id="MG"></div></div>
     </div>
+
     <!-- VIEW ALL -->
     <div class="panel" id="p5">
       <div class="sbar" id="SB"></div>
-      <div class="card"><div class="ct">זמינות</div><div style="overflow-x:auto"><table><thead><tr id="vH"></tr></thead><tbody id="vB"></tbody></table></div></div>
-      <div class="card"><div class="ct">כוננות</div><div style="overflow-x:auto"><table><thead><tr id="vdH"></tr></thead><tbody id="vdB"></tbody></table></div></div>
-      <div class="card"><div class="ct">חובש תורן</div><div style="overflow-x:auto"><table><thead><tr id="vmH"></tr></thead><tbody id="vmB"></tbody></table></div></div>
+      <div class="card"><div class="ctitle">זמינות</div><div style="overflow-x:auto"><table><thead><tr id="vH"></tr></thead><tbody id="vB"></tbody></table></div></div>
+      <div class="card"><div class="ctitle">כוננות</div><div style="overflow-x:auto"><table><thead><tr id="vdH"></tr></thead><tbody id="vdB"></tbody></table></div></div>
+      <div class="card"><div class="ctitle">חובש תורן</div><div style="overflow-x:auto"><table><thead><tr id="vmH"></tr></thead><tbody id="vmB"></tbody></table></div></div>
     </div>
   </main>
 </div>
 
-<!-- Profile modal -->
+<!-- MODALS -->
 <div class="modal" id="PM">
-  <div class="mbox">
-    <h3>✏️ עריכת פרופיל</h3>
+  <div class="mbox"><h3>✏️ עריכת פרופיל</h3>
     <div class="fi"><label>שם מלא</label><input id="pn" type="text"></div>
-    <div class="fi"><label>טלפון</label><input id="pp" type="text" inputmode="tel"></div>
-    <div class="fi"><label>תפקיד</label>
-      <div class="rgrid">
-        <button id="prb0" onclick="pickEditRole('חובש',0)">חובש</button>
-        <button id="prb1" onclick="pickEditRole('מנא',1)">מנא</button>
-        <button id="prb2" onclick="pickEditRole('מטב',2)">מטב</button>
-      </div>
-    </div>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('PM')">ביטול</button>
-      <button class="mbtn-ok" onclick="saveProfile()">💾 שמור</button>
-    </div>
-    <div style="margin-top:12px;text-align:center">
-      <button style="background:transparent;border:none;color:var(--re);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer" onclick="confirmLogout()">🚪 התנתק</button>
-    </div>
+    <div class="fi"><label>טלפון</label><input id="pp" type="text"></div>
+    <div class="fi"><label>תפקיד</label><div class="rgrid"><button id="prb0" onclick="pRole('חובש',0)">חובש</button><button id="prb1" onclick="pRole('מנא',1)">מנא</button><button id="prb2" onclick="pRole('מטב',2)">מטב</button></div></div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('PM')">ביטול</button><button class="mbok" onclick="saveProfile()">שמור</button></div>
   </div>
 </div>
-
-<!-- Upgrade admin modal -->
 <div class="modal" id="UM">
-  <div class="mbox">
-    <h3>👑 שדרוג לאדמין</h3>
+  <div class="mbox"><h3>👑 שדרוג לאדמין</h3>
     <div class="fi"><label>קוד אדמין</label><input id="ucode" type="text" inputmode="numeric" placeholder="הזן קוד"></div>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('UM')">ביטול</button>
-      <button class="mbtn-ok" onclick="doUpgrade()">אשר</button>
-    </div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('UM')">ביטול</button><button class="mbok" onclick="doUpgrade()">אשר</button></div>
   </div>
 </div>
-
-<!-- Confirm delete member modal -->
 <div class="modal" id="DM">
-  <div class="mbox" style="border-color:var(--re)">
-    <h3 style="color:var(--re)">🗑️ מחיקת משתמש</h3>
+  <div class="mbox" style="border-color:var(--re)"><h3 style="color:var(--re)">🗑️ מחיקת משתמש</h3>
     <p id="DMT" style="font-size:13px;color:var(--mu);margin-bottom:16px"></p>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('DM')">ביטול</button>
-      <button class="mbtn-del" onclick="doDelete()">מחק</button>
-    </div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('DM')">ביטול</button><button class="mbdel" onclick="doDelete()">מחק</button></div>
   </div>
 </div>
-
-<!-- Warn modal (duty) -->
 <div class="modal" id="WM">
   <div class="mbox" style="border-color:var(--re)">
-    <div style="font-size:28px;margin-bottom:8px;text-align:center">⚠️</div>
-    <div id="WMT" style="font-size:15px;font-weight:700;color:var(--re);margin-bottom:4px;text-align:center"></div>
-    <p id="WMP" style="font-size:13px;color:var(--mu);line-height:1.6;margin:8px 0 18px;text-align:center"></p>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('WM')">ביטול</button>
-      <button class="mbtn-del" onclick="forceAssign()">שבץ בכל זאת</button>
-    </div>
+    <div style="text-align:center;font-size:28px;margin-bottom:8px">⚠️</div>
+    <div id="WMT" style="font-size:15px;font-weight:700;color:var(--re);text-align:center;margin-bottom:4px"></div>
+    <p id="WMP" style="font-size:13px;color:var(--mu);text-align:center;margin:8px 0 18px;line-height:1.6"></p>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('WM')">ביטול</button><button class="mbdel" onclick="forceAssign()">שבץ בכל זאת</button></div>
   </div>
 </div>
-
-<!-- Edit mission modal -->
 <div class="modal" id="MM">
-  <div class="mbox">
-    <h3>✏️ עריכת פעילות</h3>
+  <div class="mbox"><h3>✏️ עריכת פעילות</h3>
     <div class="fi"><label>יום</label><input id="mm_day" type="text" readonly style="color:var(--mu)"></div>
-    <div class="fi"><label>שם הפעילות</label><input id="mm_name" type="text" placeholder="למשל: פטרול רגלי דיר קדיס"></div>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('MM')">ביטול</button>
-      <button class="mbtn-ok" onclick="saveMission()">💾 שמור</button>
-    </div>
+    <div class="fi"><label>שם הפעילות</label><input id="mm_name" type="text"></div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('MM')">ביטול</button><button class="mbok" onclick="saveMission()">שמור</button></div>
   </div>
 </div>
-
-<!-- Add event modal -->
 <div class="modal" id="EM">
-  <div class="mbox">
-    <h3>📅 הוספת אירוע ללו״ז</h3>
+  <div class="mbox"><h3>📅 הוספת אירוע</h3>
     <div class="fi"><label>יום</label>
-      <select id="em_day">
-        <option value="ראשון">ראשון</option><option value="שני">שני</option>
-        <option value="שלישי">שלישי</option><option value="רביעי">רביעי</option>
-        <option value="חמישי">חמישי</option><option value="שישי">שישי</option>
-        <option value="שבת">שבת</option>
-      </select>
+      <select id="em_day"></select>
     </div>
     <div class="fi"><label>כותרת</label><input id="em_title" type="text" placeholder="שם האירוע"></div>
-    <div class="fi"><label>שעות (לדוגמה: 08:00–10:00)</label><input id="em_time" type="text" placeholder="08:00–10:00"></div>
+    <div class="fi"><label>שעה / טווח (לדוגמה: 08:00–10:00)</label><input id="em_time" type="text" placeholder="08:00"></div>
     <div class="fi"><label>הערות</label><textarea id="em_note" placeholder="פרטים נוספים..."></textarea></div>
-    <div class="fi">
-      <label>משויך ל</label>
-      <div class="user-chips" id="em_users"></div>
-    </div>
-    <div class="mbox-btns">
-      <button class="mbtn-can" onclick="closeModal('EM')">ביטול</button>
-      <button class="mbtn-ok" onclick="saveEvent()">💾 הוסף</button>
-    </div>
+    <div class="fi"><label>משויך ל</label><div class="uchips" id="em_users"></div></div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('EM')">ביטול</button><button class="mbok" onclick="saveEvent()">הוסף</button></div>
+  </div>
+</div>
+<div class="modal" id="TM">
+  <div class="mbox"><h3>📋 הדבק לו"ז כטקסט</h3>
+    <div class="fi"><label>יום בשבוע</label><select id="tm_day"></select></div>
+    <div class="fi"><label>הטקסט</label><textarea id="tm_text" placeholder="06:30 חתמצ בוקר (אני)&#10;8:30 מסדר דגל&#10;11:30 קפק לוג' (דוק)" style="min-height:120px"></textarea></div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('TM')">ביטול</button><button class="mbok" onclick="parseAndSave()">✨ סדר והוסף</button></div>
+  </div>
+</div>
+<div class="modal" id="ShiftM">
+  <div class="mbox"><h3>⏰ שינוי שעה</h3>
+    <p style="font-size:13px;color:var(--mu);margin-bottom:12px" id="shiftEvTitle"></p>
+    <div class="fi"><label>שעה חדשה</label><input id="shiftTime" type="text" placeholder="09:30"></div>
+    <div class="mbtns"><button class="mbcan" onclick="closeModal('ShiftM')">ביטול</button><button class="mbok" onclick="doShiftTime()">עדכן שעה</button></div>
   </div>
 </div>
 
@@ -374,8 +409,7 @@ firebase.initializeApp({
   messagingSenderId:"20822712018",
   appId:"1:20822712018:web:8f7e54fa61f85da07b570b"
 });
-var db = firebase.database();
-
+var db=firebase.database();
 var ADMIN_CODE='6767';
 var DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 var SLOTS=['חובש_1','חובש_2','מנא','מטב'];
@@ -385,19 +419,24 @@ var RCOL={חובש:'#2ecc71',מנא:'#4f8ef7',מטב:'#f39c12'};
 var AVCOL={present:'#2ecc71',partial:'#f39c12',away:'#e74c3c',after:'#f39c12'};
 var AVOPTS=[{k:'present',l:'✅ זמין',c:'sp'},{k:'partial',l:'🟡 חלקי',c:'sx'},{k:'after',l:'🌙 אחרי תורנות',c:'sx'},{k:'away',l:'❌ לא זמין',c:'sa'}];
 
-var G={members:{},avail:{},duty:{},medic:{},missions:{},events:{},
-  me:null,selP:null,avSel:{},role:'',adminUnlocked:false,pendingPick:null,deleteUid:'',editRole:'',editMsnDay:''};
+var G={members:{},avail:{},duty:{},medic:{},missions:{},events:{},notifs:{},
+  me:null,selP:null,avSel:{},role:'',adminUnlocked:false,
+  pendingPick:null,deleteUid:'',editRole:'',editMsnDay:'',shiftEid:''};
 
 // ── FIREBASE ──
 function fbSet(p,v,cb){setSy('sy','שומר...');db.ref(p).set(v).then(function(){setSy('ok','נשמר ✓');if(cb)cb();}).catch(function(){setSy('er','שגיאה');toast('שגיאת שמירה','#e74c3c');});}
 function setSy(s,l){document.getElementById('SD').className='sdot '+s;document.getElementById('SL').textContent=l;}
+function pushNotif(text){var uid=G.me&&G.me.uid;if(!uid||G.me.guest)return;var nid='n_'+Date.now();db.ref('notifs/'+nid).set({text:text,ts:Date.now(),read:false,uid:uid});}
+function broadcastNotif(text){var nid='n_'+Date.now();db.ref('notifs/'+nid).set({text:text,ts:Date.now(),read:false,uid:'all'});}
+
 function listen(){
   db.ref('members').on('value',function(s){G.members=s.val()||{};renderAll();});
   db.ref('avail').on('value',function(s){G.avail=s.val()||{};renderAll();});
   db.ref('duty').on('value',function(s){G.duty=s.val()||{};renderAll();});
   db.ref('medic').on('value',function(s){G.medic=s.val()||{};renderAll();});
   db.ref('missions').on('value',function(s){G.missions=s.val()||{};renderAll();});
-  db.ref('events').on('value',function(s){G.events=s.val()||{};buildSched();});
+  db.ref('events').on('value',function(s){G.events=s.val()||{};buildSched();buildMySchedule();});
+  db.ref('notifs').on('value',function(s){G.notifs=s.val()||{};buildNotifs();});
   setSy('ok','מחובר');document.getElementById('OV').style.display='none';
 }
 
@@ -411,12 +450,15 @@ function assigned(day){var ids=Object.values(G.duty[day]||{}).filter(Boolean);if
 function warnReason(uid,day){var k=avKey(uid,day);if(!k)return 'לא הוגדרה זמינות';if(k==='away')return 'מסומן/ת כלא זמין/ה';if(k==='after')return 'אחרי תורנות';if(k==='partial')return 'זמין/ה חלקית';return null;}
 function avBdg(k){var m={present:'<span class="b bp">זמין</span>',away:'<span class="b ba">לא זמין</span>',partial:'<span class="b bx">חלקי</span>',after:'<span class="b bx">אחרי תורנות</span>'};return m[k]||'<span class="be">—</span>';}
 function toast(msg,c){var t=document.getElementById('T');t.textContent=msg;t.style.background=c||'var(--gr)';t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
+function openModal(id){document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
+function timeToMins(t){if(!t)return 0;var m=t.match(/(\d{1,2}):(\d{2})/);return m?parseInt(m[1])*60+parseInt(m[2]):0;}
+function fillDaySelect(id,val){var s=document.getElementById(id);s.innerHTML=DAYS.map(function(d){return '<option value="'+d+'"'+(d===val?' selected':'')+'>'+d+'</option>';}).join('');}
 
 // ── AUTH ──
 function showTab(i){for(var j=0;j<3;j++){document.getElementById('tb'+j).classList.remove('on');document.getElementById('f'+j).classList.remove('on');}document.getElementById('tb'+i).classList.add('on');document.getElementById('f'+i).classList.add('on');}
 function pickRole(r,i){G.role=r;for(var j=0;j<3;j++)document.getElementById('rb'+j).classList.remove('on');document.getElementById('rb'+i).classList.add('on');}
-function checkAdminCode(){if(document.getElementById('adminCode').value.trim()===ADMIN_CODE){G.adminUnlocked=true;var b=document.getElementById('adminBtn');b.classList.add('on');b.textContent='👑 ✓';toast('קוד אדמין אושר!');}else{toast('קוד שגוי','#e74c3c');}}
+function checkAdmin(){if(document.getElementById('adminCode').value.trim()===ADMIN_CODE){G.adminUnlocked=true;var b=document.getElementById('adminBtn');b.classList.add('on');b.textContent='👑 ✓';toast('קוד אדמין אושר!');}else{toast('קוד שגוי','#e74c3c');}}
 function doReg(){
   var n=document.getElementById('rn').value.trim(),id=document.getElementById('ri').value.trim(),p=document.getElementById('rp').value.trim();
   if(!n||!id||!p||!G.role){toast('יש למלא את כל השדות','#e74c3c');return;}
@@ -433,7 +475,6 @@ function doLogin(){
 }
 function doGuest(){G.me={uid:'guest',name:'אורח',role:'',guest:true};startApp();}
 function doLogout(){G.me=null;G.adminUnlocked=false;localStorage.removeItem('team_uid');document.getElementById('APP').style.display='none';document.getElementById('AUTH').style.display='flex';document.getElementById('adminBtn').classList.remove('on');document.getElementById('adminBtn').textContent='👑 אדמין';document.getElementById('adminCode').value='';}
-function confirmLogout(){closeModal('PM');doLogout();}
 function checkAutoLogin(){var uid=localStorage.getItem('team_uid');if(uid){db.ref('members/'+uid).once('value').then(function(s){if(s.exists()){var m=s.val();G.me={uid:uid,name:m.name,role:m.role};startApp();}else{localStorage.removeItem('team_uid');showAuth();}});}else{showAuth();}}
 function showAuth(){document.getElementById('AUTH').style.display='flex';document.getElementById('OV').style.display='none';}
 
@@ -441,44 +482,45 @@ function startApp(){
   document.getElementById('AUTH').style.display='none';
   document.getElementById('APP').style.display='block';
   document.getElementById('OV').style.display='flex';
+  var col=RCOL[G.me.role]||'var(--mu)';
   document.getElementById('UAV').textContent=G.me.name[0];
-  document.getElementById('UAV').style.background=RCOL[G.me.role]||'var(--mu)';
+  document.getElementById('UAV').style.background=col;
   document.getElementById('UN').textContent=(G.me.guest?'אורח':G.me.name)+(isAdmin()?' 👑':'');
   document.getElementById('UCH').onclick=G.me.guest?doLogout:openProfile;
+  document.getElementById('upgBtn').style.display=(!G.me.guest&&!isAdmin())?'':'none';
+  // admin-only tabs
+  document.getElementById('nt2').style.display=isAdmin()?'':'none';
+  // week badge
   var n=new Date(),su=new Date(n);su.setDate(n.getDate()-n.getDay());var sa=new Date(su);sa.setDate(su.getDate()+6);
   document.getElementById('WB').textContent=(su.getDate()+'/'+(su.getMonth()+1))+' – '+(sa.getDate()+'/'+(sa.getMonth()+1));
-  document.getElementById('nt1').style.display=isAdmin()?'':'none';
-  document.getElementById('nt2').style.display=isAdmin()?'':'none';
-  document.getElementById('upgBtn').style.display=(!G.me.guest&&!isAdmin())?'':'none';
-  document.getElementById('addEvBtn').style.display=isAdmin()?'':'none';
+  // personal header
+  document.getElementById('persAv').textContent=G.me.name[0];
+  document.getElementById('persAv').style.background=col;
+  document.getElementById('persName').textContent=G.me.guest?'אורח':G.me.name;
+  document.getElementById('persRole').textContent=G.me.guest?'':((G.me.role||'')+(isAdmin()?' · אדמין 👑':''));
+  // schedule admin btns
+  document.getElementById('schedAdminBtns').style.display=isAdmin()?'flex':'none';
   listen();goTab(0);
 }
-function goTab(i){for(var j=0;j<6;j++){document.getElementById('nt'+j).classList.remove('on');document.getElementById('p'+j).classList.remove('on');}document.getElementById('nt'+i).classList.add('on');document.getElementById('p'+i).classList.add('on');if(i===3)buildSched();if(i===5)renderVw();}
-function renderAll(){buildPG();buildDD();buildMD();buildMG();renderAvT();renderDuT();renderMeT();}
+function goTab(i){for(var j=0;j<6;j++){document.getElementById('nt'+j).classList.remove('on');document.getElementById('p'+j).classList.remove('on');}document.getElementById('nt'+i).classList.add('on');document.getElementById('p'+i).classList.add('on');if(i===5)renderVw();}
+function renderAll(){buildPG();buildDD();buildMD();buildMG();renderAvT();renderDuT();renderMeT();buildMyDuty();buildMySchedule();}
 
 // ── PROFILE ──
-function openProfile(){var m=G.members[G.me.uid];if(!m)return;document.getElementById('pn').value=m.name;document.getElementById('pp').value=m.phone;G.editRole=m.role;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');var ri={חובש:0,מנא:1,מטב:2}[m.role];if(ri!==undefined)document.getElementById('prb'+ri).classList.add('on');document.getElementById('PM').classList.add('on');}
-function pickEditRole(r,i){G.editRole=r;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');document.getElementById('prb'+i).classList.add('on');}
-function saveProfile(){var n=document.getElementById('pn').value.trim(),p=document.getElementById('pp').value.trim();if(!n||!p||!G.editRole){toast('יש למלא את כל השדות','#e74c3c');return;}var uid=G.me.uid;G.members[uid].name=n;G.members[uid].phone=p;G.members[uid].role=G.editRole;G.me.name=n;G.me.role=G.editRole;fbSet('members/'+uid,G.members[uid],function(){document.getElementById('UAV').textContent=n[0];document.getElementById('UAV').style.background=RCOL[G.editRole]||'var(--mu)';document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');renderAll();closeModal('PM');toast('✓ פרופיל עודכן');});}
-
-// ── UPGRADE / DELETE ──
-function openUpgrade(){document.getElementById('ucode').value='';document.getElementById('UM').classList.add('on');}
-function doUpgrade(){if(document.getElementById('ucode').value.trim()!==ADMIN_CODE){toast('קוד שגוי','#e74c3c');return;}if(!G.me||G.me.guest){toast('יש להתחבר','#e74c3c');return;}G.members[G.me.uid].admin=true;fbSet('members/'+G.me.uid+'/admin',true,function(){document.getElementById('UN').textContent=G.me.name+' 👑';document.getElementById('nt1').style.display='';document.getElementById('nt2').style.display='';document.getElementById('upgBtn').style.display='none';document.getElementById('addEvBtn').style.display='';closeModal('UM');toast('✓ שודרגת לאדמין!');renderAll();});}
-function confirmDelete(uid){G.deleteUid=uid;document.getElementById('DMT').textContent='האם למחוק את '+G.members[uid].name+'? פעולה זו אינה הפיכה.';document.getElementById('DM').classList.add('on');}
+function openProfile(){var m=G.members[G.me.uid];if(!m)return;document.getElementById('pn').value=m.name;document.getElementById('pp').value=m.phone;G.editRole=m.role;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');var ri={חובש:0,מנא:1,מטב:2}[m.role];if(ri!==undefined)document.getElementById('prb'+ri).classList.add('on');openModal('PM');}
+function pRole(r,i){G.editRole=r;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');document.getElementById('prb'+i).classList.add('on');}
+function saveProfile(){var n=document.getElementById('pn').value.trim(),p=document.getElementById('pp').value.trim();if(!n||!p||!G.editRole){toast('יש למלא את כל השדות','#e74c3c');return;}var uid=G.me.uid;G.members[uid].name=n;G.members[uid].phone=p;G.members[uid].role=G.editRole;G.me.name=n;G.me.role=G.editRole;fbSet('members/'+uid,G.members[uid],function(){document.getElementById('UAV').textContent=n[0];document.getElementById('UAV').style.background=RCOL[G.editRole]||'var(--mu)';document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');document.getElementById('persName').textContent=n;renderAll();closeModal('PM');toast('✓ פרופיל עודכן');});}
+function doUpgrade(){if(document.getElementById('ucode').value.trim()!==ADMIN_CODE){toast('קוד שגוי','#e74c3c');return;}if(!G.me||G.me.guest){toast('יש להתחבר','#e74c3c');return;}G.members[G.me.uid].admin=true;fbSet('members/'+G.me.uid+'/admin',true,function(){document.getElementById('UN').textContent=G.me.name+' 👑';document.getElementById('nt2').style.display='';document.getElementById('upgBtn').style.display='none';document.getElementById('schedAdminBtns').style.display='flex';closeModal('UM');toast('✓ שודרגת לאדמין!');renderAll();});}
+function confirmDelete(uid){G.deleteUid=uid;document.getElementById('DMT').textContent='האם למחוק את '+G.members[uid].name+'? פעולה זו אינה הפיכה.';openModal('DM');}
 function doDelete(){if(!G.deleteUid)return;db.ref('members/'+G.deleteUid).remove();db.ref('avail/'+G.deleteUid).remove();delete G.members[G.deleteUid];delete G.avail[G.deleteUid];closeModal('DM');renderAll();toast('✓ משתמש נמחק');}
 
 // ── AVAILABILITY ──
 function buildPG(){var g=document.getElementById('PG');if(!g)return;if(G.me.guest){g.innerHTML='<p style="color:var(--mu);font-size:13px;padding:8px">אורחים אינם יכולים לשנות זמינות</p>';return;}var admin=isAdmin(),ks=Object.keys(G.members).filter(function(uid){return admin||uid===G.me.uid;});if(!admin&&ks.length===1&&!G.selP)G.selP=ks[0];g.innerHTML=ks.map(function(uid){var m=G.members[uid];return '<div class="pc'+(G.selP===uid?' on':'')+'" onclick="selPers(\''+uid+'\')">'+'<div class="cdot" style="background:'+avCol(uid,DAYS[0])+'"></div>'+'<span style="font-size:13px;font-weight:500">'+m.name+'</span>'+'<span style="font-size:11px;color:var(--mu)">'+m.role+'</span></div>';}).join('');}
 function selPers(uid){G.selP=uid;buildPG();}
-function startAv(){if(!G.selP){toast('בחר/י חבר צוות','#e74c3c');return;}G.avSel=Object.assign({},(G.avail[G.selP]||{}));document.getElementById('AVL').textContent=G.members[G.selP]?G.members[G.selP].name:'';document.getElementById('ADR').innerHTML=DAYS.map(function(day){return '<div class="dr"><div style="font-size:13px;font-weight:500">'+day+'</div>'+'<div class="avbtns">'+AVOPTS.map(function(o){return '<button class="avbtn'+(G.avSel[day]===o.k?' '+o.c:'')+'" onclick="setAD(\''+day+'\',\''+o.k+'\',\''+o.c+'\',this)">'+o.l+'</button>';}).join('')+'</div></div>';}).join('');document.getElementById('ws0').classList.remove('on');document.getElementById('ws1').classList.add('on');}
-function setAD(day,k,c,btn){G.avSel[day]=k;btn.closest('.dr').querySelectorAll('.avbtn').forEach(function(b){b.className='avbtn';});btn.classList.add(c);}
+function startAv(){if(!G.selP){toast('בחר/י חבר צוות','#e74c3c');return;}G.avSel=Object.assign({},(G.avail[G.selP]||{}));document.getElementById('AVL').textContent=G.members[G.selP]?G.members[G.selP].name:'';document.getElementById('ADR').innerHTML=DAYS.map(function(day){return '<div class="dr"><div style="font-size:13px;font-weight:500">'+day+'</div><div class="avbtns">'+AVOPTS.map(function(o){return '<button class="avbtn'+(G.avSel[day]===o.k?' '+o.c:'')+'" onclick="setAvD(\''+day+'\',\''+o.k+'\',\''+o.c+'\',this)">'+o.l+'</button>';}).join('')+'</div></div>';}).join('');document.getElementById('av1').classList.remove('on');document.getElementById('av2').classList.add('on');}
+function setAvD(day,k,c,btn){G.avSel[day]=k;btn.closest('.dr').querySelectorAll('.avbtn').forEach(function(b){b.className='avbtn';});btn.classList.add(c);}
 function saveAv(){fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});}
-function backAv(){document.getElementById('ws1').classList.remove('on');document.getElementById('ws0').classList.add('on');}
+function backAv(){document.getElementById('av2').classList.remove('on');document.getElementById('av1').classList.add('on');}
 function renderAvT(){document.getElementById('avH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('avB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(r[d])+'</td>';}).join('')+'</tr>';}).join('');}
-
-// ── MISSION EDIT ──
-function openEditMsn(day){G.editMsnDay=day;document.getElementById('mm_day').value=day;document.getElementById('mm_name').value=getMsn(day);document.getElementById('MM').classList.add('on');}
-function saveMission(){var v=document.getElementById('mm_name').value.trim();fbSet('missions/'+G.editMsnDay,v||null,function(){closeModal('MM');toast('✓ פעילות עודכנה');});}
 
 // ── PICKER ──
 function allowedRoles(slot){if(slot==='מטב')return['מטב'];if(slot==='מנא')return['מנא'];return['חובש','מנא'];}
@@ -486,131 +528,221 @@ function picker(id,day,cur){
   var m=cur?G.members[cur]:null,col=cur?avCol(cur,day):'#7880a0';
   var slot='';if(id.indexOf('du_')===0){var rest=id.slice(3);slot=rest.slice(rest.indexOf('_')+1);}
   var allowed=slot?allowedRoles(slot):Object.keys(RCOL);
-  var opts='<div class="mo cl" onclick="doPick(\''+id+'\',\'\',\''+day+'\')">— הסר שיבוץ —</div>';
+  var opts='<div class="mo cl" onclick="doPick(\''+id+'\',\'\',\''+day+'\')">— הסר —</div>';
   opts+=Object.keys(G.members).filter(function(uid){return allowed.indexOf(G.members[uid].role)>=0;}).map(function(uid){
     var mem=G.members[uid],taken=assigned(day).indexOf(uid)>=0&&uid!==cur,warn=warnReason(uid,day);
     if(taken)return '<div class="mo dis"><div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">משובץ כבר</span></div></div>';
-    if(warn) return '<div class="mo wn" onclick="tryPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="wb2">⚠ '+warn+'</span></div></div>';
+    if(warn) return '<div class="mo" onclick="tryPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="wb2">⚠ '+warn+'</span></div></div>';
     return '<div class="mo" onclick="doPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">'+mem.role+'</span></div></div>';
   }).join('');
   return '<div class="mp"><div class="mdisp'+(cur?' fil':'')+'" onclick="event.stopPropagation();toggleDD(\''+id+'\')">'+'<span>'+(m?m.name:'בחר...')+'</span><div class="avdot" style="background:'+col+'"></div></div>'+'<div class="mdd" id="DD_'+id+'" onclick="event.stopPropagation()">'+opts+'</div></div>';
 }
 function toggleDD(id){var dd=document.getElementById('DD_'+id);if(!dd)return;var was=dd.classList.contains('on');document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});if(!was)dd.classList.add('on');}
 document.addEventListener('click',function(){document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});});
-function tryPick(id,uid,day){document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});G.pendingPick={id:id,uid:uid,day:day};document.getElementById('WMT').textContent=G.members[uid].name+' לא זמין/ה';document.getElementById('WMP').textContent=warnReason(uid,day);document.getElementById('WM').classList.add('on');}
+function tryPick(id,uid,day){document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});G.pendingPick={id:id,uid:uid,day:day};document.getElementById('WMT').textContent=G.members[uid].name+' לא זמין/ה';document.getElementById('WMP').textContent=warnReason(uid,day);openModal('WM');}
 function forceAssign(){if(G.pendingPick)doPick(G.pendingPick.id,G.pendingPick.uid,G.pendingPick.day);closeModal('WM');}
 function doPick(id,uid,day){
   if(id.indexOf('du_')===0){var rest=id.slice(3),di=rest.indexOf('_'),d=rest.slice(0,di),slot=rest.slice(di+1);if(!G.duty[d])G.duty[d]={};if(uid)G.duty[d][slot]=uid;else delete G.duty[d][slot];fbSet('duty/'+d,G.duty[d]||null);buildDD();renderDuT();}
   else{var d=id.slice(3);if(uid)G.medic[d]=uid;else delete G.medic[d];fbSet('medic/'+d,uid||null);buildMD();renderMeT();}
 }
 
+// ── MISSION ──
+function openEditMsn(day){G.editMsnDay=day;document.getElementById('mm_day').value=day;document.getElementById('mm_name').value=getMsn(day);openModal('MM');}
+function saveMission(){var v=document.getElementById('mm_name').value.trim();fbSet('missions/'+G.editMsnDay,v||null,function(){closeModal('MM');toast('✓ פעילות עודכנה');});}
+
 // ── DUTY ──
-function buildDD(){var c=document.getElementById('DD');if(!c)return;c.innerHTML=DAYS.map(function(day){var msn=getMsn(day);var editLink=isAdmin()?'<span class="edit-msn" onclick="openEditMsn(\''+day+'\')">✏️</span>':'';return '<div class="dd"><div class="ddh">'+day+(msn?'<span class="mt-tag">'+msn+'</span>':'')+editLink+'</div>'+'<div class="ddr">'+SLOTS.map(function(s){return '<div><div class="rl">'+SLBL[s]+'</div>'+picker('du_'+day+'_'+s,day,(G.duty[day]||{})[s]||'')+'</div>';}).join('')+'</div></div>';}).join('');}
-function saveDu(){fbSet('duty',G.duty,function(){toast('✓ שיבוץ כוננות נשמר');});}
+function buildDD(){var c=document.getElementById('DD');if(!c)return;c.innerHTML=DAYS.map(function(day){var msn=getMsn(day);var editLnk=isAdmin()?'<span class="editmsn" onclick="openEditMsn(\''+day+'\')">✏️</span>':'';return '<div class="dday"><div class="ddayh">'+day+(msn?'<span class="msntag">'+msn+'</span>':'')+editLnk+'</div><div class="droles">'+SLOTS.map(function(s){return '<div><div class="rl">'+SLBL[s]+'</div>'+picker('du_'+day+'_'+s,day,(G.duty[day]||{})[s]||'')+'</div>';}).join('')+'</div></div>';}).join('');}
+function saveDu(){fbSet('duty',G.duty,function(){broadcastNotif('שיבוץ כוננות עודכן');toast('✓ שיבוץ כוננות נשמר');});}
 function renderDuT(){document.getElementById('duH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');document.getElementById('duB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');}
 
 // ── MEDIC ──
-function buildMD(){var c=document.getElementById('MD');if(!c)return;c.innerHTML=DAYS.map(function(day){return '<div class="dd"><div class="ddh">'+day+'</div><div style="max-width:260px"><div class="rl">חובש/ת תורן/ת</div>'+picker('me_'+day,day,G.medic[day]||'')+'</div></div>';}).join('');}
-function saveMe(){fbSet('medic',G.medic,function(){toast('✓ חובש תורן נשמר');});}
+function buildMD(){var c=document.getElementById('MD');if(!c)return;c.innerHTML=DAYS.map(function(day){return '<div class="dday"><div class="ddayh">'+day+'</div><div style="max-width:260px"><div class="rl">חובש/ת תורן/ת</div>'+picker('me_'+day,day,G.medic[day]||'')+'</div></div>';}).join('');}
+function saveMe(){fbSet('medic',G.medic,function(){broadcastNotif('שיבוץ חובש תורן עודכן');toast('✓ חובש תורן נשמר');});}
 function renderMeT(){document.getElementById('meH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('meB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';}
 
 // ── SCHEDULE ──
+function evUsers(e){
+  if(!e.users)return[];
+  if(e.users.all)return['all'];
+  return Object.keys(e.users).filter(function(k){return e.users[k];});
+}
+function evUserNames(e){
+  var uids=evUsers(e);
+  if(!uids.length)return'';
+  if(uids[0]==='all')return'כולם';
+  return uids.map(function(uid){return G.members[uid]?G.members[uid].name:uid;}).join(', ');
+}
+function isMyEvent(e){
+  if(!G.me||G.me.guest)return false;
+  if(!e.users)return true;
+  return e.users.all||e.users[G.me.uid];
+}
+function getSortedEvents(day){
+  var evs=[];
+  Object.keys(G.events).forEach(function(eid){var e=G.events[eid];if(e&&e.day===day)evs.push({id:eid,ev:e});});
+  evs.sort(function(a,b){return timeToMins(a.ev.time)-timeToMins(b.ev.time);});
+  return evs;
+}
 function buildSched(){
   var c=document.getElementById('SCHED');if(!c)return;
+  var admin=isAdmin();
   c.innerHTML=DAYS.map(function(day){
-    var evs=[];
-    Object.keys(G.events).forEach(function(eid){var e=G.events[eid];if(e&&e.day===day)evs.push({id:eid,ev:e});});
-    evs.sort(function(a,b){return (a.ev.time||'').localeCompare(b.ev.time||'');});
+    var evs=getSortedEvents(day);
     var evHtml=evs.length?evs.map(function(item){
-      var e=item.ev;
-      var isMine=!e.users||e.users.all||(G.me&&e.users[G.me.uid]);
-      var cls=e.users&&e.users.all?'all':isMine?'mine':'';
-      var delBtn=isAdmin()?'<button class="ev-del" onclick="deleteEvent(\''+item.id+'\')">🗑</button>':'';
-      var userNames='';
-      if(e.users&&!e.users.all){var uids=Object.keys(e.users).filter(function(k){return e.users[k];});userNames=uids.map(function(uid){return G.members[uid]?G.members[uid].name:uid;}).join(', ');}
-      else if(e.users&&e.users.all){userNames='כולם';}
-      return '<div class="sched-event '+cls+'">'
-        +delBtn
-        +(e.time?'<div class="ev-time">🕐 '+e.time+'</div>':'')
+      var e=item.ev;var mine=isMyEvent(e);
+      var cls=e.users&&e.users.all?'evall':mine?'mine':'';
+      if(e.timeChanged)cls+=' changed';
+      var delBtn=admin?'<button class="ev-act red" onclick="deleteEvent(\''+item.id+'\')">🗑 מחק</button>':'';
+      var shiftBtn=admin?'<button class="ev-act" onclick="openShift(\''+item.id+'\')">⏰ שנה שעה</button>':'';
+      var unames=evUserNames(e);
+      return '<div class="sev '+cls+'">'
+        +(e.time?'<div class="ev-time">🕐 '+e.time+(e.timeChanged?'<span class="ev-changed-badge">שעה שונתה</span>':'')+'</div>':'')
         +'<div class="ev-title">'+e.title+'</div>'
-        +(userNames?'<div class="ev-users">👤 '+userNames+'</div>':'')
+        +(unames?'<div class="ev-users">👤 '+unames+'</div>':'')
         +(e.note?'<div class="ev-note">'+e.note+'</div>':'')
+        +(admin?'<div class="ev-actions">'+shiftBtn+delBtn+'</div>':'')
         +'</div>';
     }).join(''):'<div class="sched-empty">אין אירועים</div>';
-    return '<div class="sched-day">'
-      +'<div class="sched-day-hdr"><span>'+day+'</span>'
-      +(isAdmin()?'<button class="btn sm" onclick="openAddEventDay(\''+day+'\')">+</button>':'')
-      +'</div>'
-      +'<div class="sched-events">'+evHtml+'</div>'
-      +'</div>';
+    return '<div class="sday"><div class="sdayh"><span>'+day+'</span>'
+      +(admin?'<button class="btn sm" onclick="openAddEventDay(\''+day+'\')">+</button>':'')
+      +'</div><div class="sevents">'+evHtml+'</div></div>';
   }).join('');
 }
-function openAddEvent(){document.getElementById('em_day').value=DAYS[0];openAddEventDay(DAYS[0]);}
+function openAddEvent(){fillDaySelect('em_day',DAYS[0]);openAddEventDay(DAYS[0]);}
 function openAddEventDay(day){
-  document.getElementById('em_day').value=day;
-  document.getElementById('em_title').value='';
-  document.getElementById('em_time').value='';
-  document.getElementById('em_note').value='';
-  // build user chips
-  var chips='<div class="uchip2 all on" id="ec_all" onclick="toggleEvAll()">כולם</div>';
-  chips+=Object.keys(G.members).map(function(uid){var m=G.members[uid];return '<div class="uchip2" id="ec_'+uid+'" onclick="toggleEvUser(\''+uid+'\')">'+m.name+'</div>';}).join('');
-  document.getElementById('em_users').innerHTML=chips;
-  document.getElementById('EM').classList.add('on');
+  fillDaySelect('em_day',day);
+  document.getElementById('em_title').value='';document.getElementById('em_time').value='';document.getElementById('em_note').value='';
+  buildUserChips('em_users',{});openModal('EM');
 }
-function toggleEvAll(){
-  var allBtn=document.getElementById('ec_all');
-  var isAll=allBtn.classList.contains('on');
-  if(!isAll){allBtn.classList.add('on');Object.keys(G.members).forEach(function(uid){var el=document.getElementById('ec_'+uid);if(el)el.classList.remove('on');});}
+function buildUserChips(cid,sel){
+  var c=document.getElementById(cid);if(!c)return;
+  c.innerHTML='<div class="uchip2 all on" id="ec_all" onclick="toggleEvAll()">כולם</div>'
+    +Object.keys(G.members).map(function(uid){var m=G.members[uid];return '<div class="uchip2'+(sel[uid]?' on':'')+'" id="ec_'+uid+'" onclick="toggleEvUser(\''+uid+'\')">'+m.name+'</div>';}).join('');
 }
-function toggleEvUser(uid){
-  var el=document.getElementById('ec_'+uid);if(!el)return;
-  el.classList.toggle('on');
-  document.getElementById('ec_all').classList.remove('on');
-}
+function toggleEvAll(){var a=document.getElementById('ec_all');var was=a.classList.contains('on');if(!was){a.classList.add('on');Object.keys(G.members).forEach(function(uid){var el=document.getElementById('ec_'+uid);if(el)el.classList.remove('on');});}}
+function toggleEvUser(uid){var el=document.getElementById('ec_'+uid);if(el)el.classList.toggle('on');document.getElementById('ec_all').classList.remove('on');}
+function getChipUsers(){var a=document.getElementById('ec_all');if(a&&a.classList.contains('on'))return{all:true};var u={};Object.keys(G.members).forEach(function(uid){var el=document.getElementById('ec_'+uid);if(el&&el.classList.contains('on'))u[uid]=true;});return u;}
 function saveEvent(){
-  var day=document.getElementById('em_day').value;
-  var title=document.getElementById('em_title').value.trim();
-  var time=document.getElementById('em_time').value.trim();
-  var note=document.getElementById('em_note').value.trim();
+  var day=document.getElementById('em_day').value,title=document.getElementById('em_title').value.trim();
+  var time=document.getElementById('em_time').value.trim(),note=document.getElementById('em_note').value.trim();
   if(!title){toast('יש להזין כותרת','#e74c3c');return;}
-  var allBtn=document.getElementById('ec_all');
-  var users={};
-  if(allBtn&&allBtn.classList.contains('on')){users={all:true};}
-  else{Object.keys(G.members).forEach(function(uid){var el=document.getElementById('ec_'+uid);if(el&&el.classList.contains('on'))users[uid]=true;});}
+  var ev={day:day,title:title,users:getChipUsers()};
+  if(time)ev.time=time;if(note)ev.note=note;
   var eid='ev_'+Date.now();
-  var ev={day:day,title:title};
-  if(time)ev.time=time;if(note)ev.note=note;ev.users=users;
-  fbSet('events/'+eid,ev,function(){closeModal('EM');toast('✓ אירוע נוסף');});
+  fbSet('events/'+eid,ev,function(){closeModal('EM');broadcastNotif('אירוע חדש נוסף ללו"ז: '+title);toast('✓ אירוע נוסף');});
 }
 function deleteEvent(eid){db.ref('events/'+eid).remove().then(function(){toast('✓ אירוע נמחק');});}
+function openShift(eid){G.shiftEid=eid;var e=G.events[eid];document.getElementById('shiftEvTitle').textContent=e?e.title:'';document.getElementById('shiftTime').value=e&&e.time?e.time:'';openModal('ShiftM');}
+function doShiftTime(){
+  var t=document.getElementById('shiftTime').value.trim();if(!t){toast('הזן שעה','#e74c3c');return;}
+  var eid=G.shiftEid,e=G.events[eid];if(!e)return;
+  e.time=t;e.timeChanged=true;
+  fbSet('events/'+eid,e,function(){closeModal('ShiftM');broadcastNotif('שעת האירוע "'+e.title+'" שונתה ל-'+t);toast('✓ שעה עודכנה');});
+}
+
+// ── TEXT PARSE ──
+function openParseModal(){fillDaySelect('tm_day',DAYS[0]);document.getElementById('tm_text').value='';openModal('TM');}
+function parseAndSave(){
+  var day=document.getElementById('tm_day').value;
+  var text=document.getElementById('tm_text').value.trim();
+  if(!text){toast('הכנס טקסט','#e74c3c');return;}
+  var lines=text.split('\n');
+  var parsed=[];
+  lines.forEach(function(line){
+    line=line.trim();if(!line)return;
+    // extract time: optional leading digits:digits
+    var timeMatch=line.match(/^(\d{1,2}:\d{2})\s*/);
+    var time='',rest=line;
+    if(timeMatch){time=timeMatch[1];rest=line.slice(timeMatch[0].length);}
+    // extract user in parens at end
+    var userMatch=rest.match(/\(([^)]+)\)\s*$/);
+    var userHint='',title=rest;
+    if(userMatch){userHint=userMatch[1].trim();title=rest.slice(0,rest.lastIndexOf('(')).trim();}
+    // map userHint to uid
+    var users={};
+    if(userHint){
+      if(userHint==='אני'&&G.me&&!G.me.guest){users[G.me.uid]=true;}
+      else{
+        Object.keys(G.members).forEach(function(uid){
+          var m=G.members[uid];
+          if(m.name===userHint||m.name.indexOf(userHint)>=0||userHint.indexOf(m.name)>=0)users[uid]=true;
+        });
+      }
+      if(!Object.keys(users).length)users={all:true};
+    } else {users={all:true};}
+    parsed.push({day:day,title:title,time:time,users:users});
+  });
+  if(!parsed.length){toast('לא נמצאו שורות','#e74c3c');return;}
+  // sort by time
+  parsed.sort(function(a,b){return timeToMins(a.time)-timeToMins(b.time);});
+  // merge with existing events for that day, re-sort
+  var batch={};
+  parsed.forEach(function(ev){var eid='ev_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);batch[eid]=ev;});
+  // write all
+  var ops=Object.keys(batch).length;var done=0;
+  Object.keys(batch).forEach(function(eid){
+    db.ref('events/'+eid).set(batch[eid]).then(function(){done++;if(done===ops){closeModal('TM');broadcastNotif('לו"ז '+day+' עודכן ('+ops+' אירועים)');toast('✓ '+ops+' אירועים נוספו ללו"ז');}});
+  });
+}
+
+// ── MY SCHEDULE ──
+function buildMySchedule(){
+  var c=document.getElementById('mySchedule');if(!c)return;
+  if(G.me&&G.me.guest){c.innerHTML='<p style="color:var(--mu);font-size:13px">אורח — אין לו"ז אישי</p>';return;}
+  var html='';
+  DAYS.forEach(function(day){
+    var evs=getSortedEvents(day).filter(function(item){return isMyEvent(item.ev);});
+    if(!evs.length)return;
+    html+='<div style="margin-bottom:10px"><div style="font-size:12px;font-weight:600;color:var(--ac);margin-bottom:5px">'+day+'</div>';
+    html+=evs.map(function(item){var e=item.ev;
+      return '<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--br)">'
+        +(e.time?'<span style="font-size:11px;color:var(--mu);white-space:nowrap;min-width:50px">'+e.time+'</span>':'')
+        +'<span style="font-size:12px;font-weight:500">'+e.title+'</span>'
+        +(e.note?'<span style="font-size:11px;color:var(--mu)"> · '+e.note+'</span>':'')
+        +'</div>';
+    }).join('');
+    html+='</div>';
+  });
+  c.innerHTML=html||'<p style="color:var(--mu);font-size:13px">אין אירועים רלוונטיים השבוע</p>';
+}
+
+// ── MY DUTY ──
+function buildMyDuty(){
+  var c=document.getElementById('myDuty');if(!c)return;
+  if(G.me&&G.me.guest){c.innerHTML='<p style="color:var(--mu);font-size:13px">אורח — אין שיבוצים</p>';return;}
+  var uid=G.me.uid;var badges='';
+  DAYS.forEach(function(day){
+    var d=G.duty[day]||{};var isOnDuty=false;
+    SLOTS.forEach(function(s){if(d[s]===uid)isOnDuty=true;});
+    if(isOnDuty)badges+='<span class="duty-badge">🔰 '+day+'</span>';
+    if(G.medic[day]===uid)badges+='<span class="duty-badge">🩺 חובש תורן — '+day+'</span>';
+  });
+  c.innerHTML=badges||'<p style="color:var(--mu);font-size:13px">לא משובץ השבוע</p>';
+}
+
+// ── NOTIFICATIONS ──
+function buildNotifs(){
+  var c=document.getElementById('notifList');if(!c)return;
+  var myUid=G.me&&G.me.uid;
+  var items=Object.keys(G.notifs).map(function(k){return Object.assign({id:k},G.notifs[k]);})
+    .filter(function(n){return n.uid==='all'||(myUid&&n.uid===myUid);})
+    .sort(function(a,b){return b.ts-a.ts}).slice(0,20);
+  if(!items.length){c.innerHTML='<p style="color:var(--mu);font-size:13px;padding:8px">אין עדכונים</p>';return;}
+  c.innerHTML=items.map(function(n){
+    var dt=new Date(n.ts);var ts=dt.getDate()+'/'+(dt.getMonth()+1)+' '+dt.getHours()+':'+('0'+dt.getMinutes()).slice(-2);
+    return '<div class="notif-item"><div class="notif-dot'+(n.read?' read':'')+'"></div><div class="notif-text">'+n.text+'</div><div class="notif-time">'+ts+'</div></div>';
+  }).join('');
+}
+function markAllRead(){
+  Object.keys(G.notifs).forEach(function(k){if(!G.notifs[k].read)db.ref('notifs/'+k+'/read').set(true);});
+  toast('✓ סומן כנקרא');
+}
 
 // ── MEMBERS ──
-function buildMG(){
-  var g=document.getElementById('MG');if(!g)return;
-  var ks=Object.keys(G.members);var admin=isAdmin();
-  g.innerHTML=ks.length?ks.map(function(uid){var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';var isSelf=uid===G.me.uid;
-    return '<div class="mc"><div class="mav" style="background:'+col+'">'+m.name[0]+'</div>'
-      +'<div style="flex:1"><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div>'
-      +'<div style="font-size:11px;color:var(--mu);margin-top:2px">'+m.phone+' · מ"א '+m.id+'</div>'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-top:6px">'
-      +'<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span>'
-      +(isSelf?'<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-family:\'Rubik\',sans-serif;font-size:11px;cursor:pointer" onclick="openProfile()">✏️ ערוך</button>':'')
-      +(admin&&!isSelf?'<button class="del-btn" onclick="confirmDelete(\''+uid+'\')">🗑️ מחק</button>':'')
-      +'</div></div></div>';
-  }).join(''):'<p style="color:var(--mu);text-align:center;padding:20px;font-size:13px">אין חברי צוות</p>';
-}
+function buildMG(){var g=document.getElementById('MG');if(!g)return;var ks=Object.keys(G.members);var admin=isAdmin();g.innerHTML=ks.length?ks.map(function(uid){var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';var isSelf=uid===G.me.uid;return '<div class="mc"><div class="mav2" style="background:'+col+'">'+m.name[0]+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div><div style="font-size:11px;color:var(--mu);margin-top:2px">'+m.phone+' · מ"א '+m.id+'</div><div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span>'+(isSelf?'<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-family:\'Rubik\',sans-serif;font-size:11px;cursor:pointer" onclick="openProfile()">✏️ ערוך</button>':'')+(admin&&!isSelf?'<button class="del-btn" onclick="confirmDelete(\''+uid+'\')">🗑️ מחק</button>':'')+'</div></div></div>';}).join(''):'<p style="color:var(--mu);text-align:center;padding:20px;font-size:13px">אין חברי צוות</p>';}
 
 // ── VIEW ALL ──
-function renderVw(){
-  var mc=Object.keys(G.members).length,ac=Object.values(G.avail).reduce(function(s,r){return s+Object.values(r).filter(function(v){return v==='present';}).length;},0);
-  document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div>'+'<div class="sb2"><div class="sv">'+ac+'</div><div class="sl2">ימי זמינות</div></div>'+'<div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div>'+'<div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';
-  document.getElementById('vH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');
-  document.getElementById('vB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(r[d])+'</td>';}).join('')+'</tr>';}).join('');
-  document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');
-  document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');
-  document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');
-  document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';
-}
+function renderVw(){var mc=Object.keys(G.members).length,ac=Object.values(G.avail).reduce(function(s,r){return s+Object.values(r).filter(function(v){return v==='present';}).length;},0);document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div><div class="sb2"><div class="sv">'+ac+'</div><div class="sl2">ימי זמינות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';document.getElementById('vH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(r[d])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';}
 
 checkAutoLogin();
 </script>
