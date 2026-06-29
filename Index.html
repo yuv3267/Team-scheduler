@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת שיבוץ צוות</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+  :root {
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#222535;--border:#2e3248;
+    --accent:#4f8ef7;--accent2:#7c5cbf;--green:#2ecc71;--yellow:#f39c12;
+    --red:#e74c3c;--text:#e8eaf0;--muted:#7880a0;--radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Rubik',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .logo{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+  header h1{font-size:17px;font-weight:600}
+  header span{font-size:12px;color:var(--muted)}
+  .header-right{margin-right:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .week-badge{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--muted)}
+  .sync-pill{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--muted)}
+  .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+  .sync-dot.syncing{background:var(--yellow);animation:pulse .8s infinite}
+  .sync-dot.ok{background:var(--green)}
+  .sync-dot.err{background:var(--red)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  nav{display:flex;gap:4px;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+  .tab{padding:7px 16px;border-radius:8px;border:none;background:transparent;color:var(--muted);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .tab:hover{background:var(--surface2);color:var(--text)}
+  .tab.active{background:var(--accent);color:#fff;font-weight:500}
+  main{padding:20px;max-width:1100px;margin:0 auto}
+  .panel{display:none}.panel.active{display:block}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+  .card-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:5px}
+  input[type=text]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Rubik',sans-serif;font-size:14px;padding:8px 11px;outline:none;transition:border-color .15s}
+  input:focus{border-color:var(--accent)}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-family:'Rubik',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+  .btn:hover{opacity:.85}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+  /* auth */
+  .auth-card{max-width:460px;margin:60px auto;text-align:center}
+  .auth-card h2{font-size:20px;margin-bottom:10px}
+  .auth-card p{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+  .token-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:monospace;font-size:12px;padding:10px;outline:none;margin-bottom:12px;direction:ltr}
+  .token-input:focus{border-color:var(--accent)}
+  .auth-steps{text-align:right;margin-bottom:20px}
+  .auth-steps li{font-size:13px;color:var(--muted);margin-bottom:6px;padding-right:4px}
+  .auth-steps a{color:var(--accent);text-decoration:none}
+  /* wizard */
+  .wizard-step{display:none}.wizard-step.active{display:block}
+  .step-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .step-num{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+  .step-title{font-size:15px;font-weight:600}
+  .step-sub{font-size:12px;color:var(--muted)}
+  .day-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+  .day-row:last-child{border-bottom:none}
+  .day-label{font-size:13px;font-weight:500}
+  .status-btns{display:flex;gap:6px;flex-wrap:wrap}
+  .status-btn{padding:5px 11px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Rubik',sans-serif;font-size:12px;cursor:pointer;transition:all .12s}
+  .status-btn:hover{border-color:var(--accent);color:var(--text)}
+  .status-btn.sel-present{background:#1a3d28;border-color:var(--green);color:var(--green)}
+  .status-btn.sel-away{background:#3d2020;border-color:var(--red);color:var(--red)}
+  .status-btn.sel-after{background:#3d2e10;border-color:var(--yellow);color:var(--yellow)}
+  .status-btn.sel-line{background:#2c1a4a;border-color:var(--accent2);color:var(--accent2)}
+  /* tables */
+  .data-table{width:100%;border-collapse:collapse;font-size:12px}
+  .data-table th{background:var(--surface2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.04em;padding:9px 12px;text-align:center;border:1px solid var(--border)}
+  .data-table td{padding:9px 12px;border:1px solid var(--border);text-align:center}
+  .data-table tr:hover td{background:var(--surface2)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+  .badge-present{background:#1a3d28;color:var(--green)}
+  .badge-away{background:#3d2020;color:var(--red)}
+  .badge-after{background:#3d2e10;color:var(--yellow)}
+  .badge-line{background:#2c1a4a;color:var(--accent2)}
+  .badge-empty{color:var(--muted)}
+  /* duty */
+  .duty-grid{display:grid;gap:10px}
+  .duty-day-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .duty-day-header{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--border);color:var(--accent);display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+  .duty-roles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .mission-tag{font-size:11px;font-weight:400;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--muted)}
+  /* summary */
+  .summary-bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:120px}
+  .stat-val{font-size:24px;font-weight:700;color:var(--accent);line-height:1}
+  .stat-lbl{font-size:11px;color:var(--muted);margin-top:3px}
+  /* person chips */
+  .person-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:14px}
+  .person-chip{padding:9px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:13px;cursor:pointer;text-align:center;transition:all .12s}
+  .person-chip.sel{border-color:var(--accent);background:rgba(79,142,247,.15);color:var(--text);font-weight:500}
+  .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  /* toast */
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;font-weight:500;transition:transform .3s;z-index:99;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  /* loading */
+  .overlay{position:fixed;inset:0;background:rgba(15,17,23,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:200;font-size:14px;color:var(--muted)}
+  .spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(max-width:560px){.duty-roles{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="authScreen" style="padding:20px;display:none">
+  <div class="card auth-card">
+    <div class="logo" style="margin:0 auto 16px">🛡</div>
+    <h2>חיבור ל-Google Sheets</h2>
+    <p>כדי לשמור נתונים אוטומטית נדרש token גישה ל-Google Sheets API.</p>
+    <ol class="auth-steps">
+      <li>פתח: <a href="https://developers.google.com/oauthplayground" target="_blank">OAuth Playground</a></li>
+      <li>בחר <strong>Sheets API v4</strong> ← <em>spreadsheets</em></li>
+      <li>לחץ <strong>Authorize APIs</strong> ← <strong>Exchange</strong></li>
+      <li>העתק את <strong>Access token</strong> לכאן:</li>
+    </ol>
+    <input class="token-input" id="tokenInput" placeholder="ya29.xxxx..." dir="ltr">
+    <button class="btn" style="width:100%" onclick="connectToken()">התחבר והמשך</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" style="display:none">
+  <div class="overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <span id="loadingMsg">טוען נתונים...</span>
+  </div>
+
+  <header>
+    <div class="logo">🛡</div>
+    <div>
+      <h1>מערכת שיבוץ צוות</h1>
+      <span>כוננות · חובש תורן · נוכחות</span>
+    </div>
+    <div class="header-right">
+      <div class="week-badge" id="weekBadge">—</div>
+      <div class="sync-pill">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">ממתין</span>
+      </div>
+      <button class="btn secondary" style="font-size:11px;padding:5px 10px" onclick="logout()">התנתק</button>
+    </div>
+  </header>
+
+  <nav>
+    <button class="tab active" onclick="switchTab('attendance',this)">📋 לו"ז נוכחות</button>
+    <button class="tab" onclick="switchTab('duty',this)">🔰 כוננות</button>
+    <button class="tab" onclick="switchTab('medic',this)">🩺 חובש תורן</button>
+    <button class="tab" onclick="switchTab('view',this)">👁 הכל</button>
+  </nav>
+
+  <main>
+    <!-- ATTENDANCE -->
+    <div class="panel active" id="panel-attendance">
+      <div class="card">
+        <div class="card-title">עדכון לו"ז נוכחות</div>
+        <div class="wizard-step active" id="att-step1">
+          <div class="step-header">
+            <div class="step-num">1</div>
+            <div><div class="step-title">בחר/י איש צוות</div></div>
+          </div>
+          <div class="person-grid" id="personGrid"></div>
+          <div class="actions"><button class="btn" onclick="startWizard()">המשך ←</button></div>
+        </div>
+        <div class="wizard-step" id="att-step2">
+          <div class="step-header">
+            <div class="step-num">2</div>
+            <div><div class="step-title">סטטוס לכל יום</div><div class="step-sub" id="wizardPersonLabel">—</div></div>
+          </div>
+          <div id="dayRows"></div>
+          <div class="actions">
+            <button class="btn secondary" onclick="goBackWizard()">← חזור</button>
+            <button class="btn" id="saveAttBtn" onclick="saveAttendance()">💾 שמור</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">טבלת נוכחות</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="attHead"></tr></thead><tbody id="attBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- DUTY -->
+    <div class="panel" id="panel-duty">
+      <div class="card">
+        <div class="card-title">שיבוץ צוות כוננות</div>
+        <div class="duty-grid" id="dutyGrid"></div>
+        <div class="actions"><button class="btn" id="saveDutyBtn" onclick="saveDuty()">💾 שמור</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title">סיכום כוננות</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="dutyHead"></tr></thead><tbody id="dutyBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- MEDIC -->
+    <div class="panel" id="panel-medic">
+      <div class="card">
+        <div class="card-title">שיבוץ חובש תורן</div>
+        <div class="duty-grid" id="medicGrid"></div>
+        <div class="actions"><button class="btn" id="saveMedicBtn" onclick="saveMedic()">💾 שמור</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title">חובש תורן השבוע</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="medicHead"></tr></thead><tbody id="medicBody"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- VIEW ALL -->
+    <div class="panel" id="panel-view">
+      <div class="summary-bar" id="summaryBar"></div>
+      <div class="card">
+        <div class="card-title">נוכחות</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="vAttHead"></tr></thead><tbody id="vAttBody"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-title">כוננות</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="vDutyHead"></tr></thead><tbody id="vDutyBody"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-title">חובש תורן</div>
+        <div style="overflow-x:auto"><table class="data-table"><thead><tr id="vMedicHead"></tr></thead><tbody id="vMedicBody"></tbody></table></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ CONFIG ============
+const SHEET_ID = '1-0hHVHSqN8VubrN8Z7W7dq6PavSyz7-MHCGnu3LBfyI';
+const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const WORK_DAYS = ['ראשון','שני','שלישי','רביעי','חמישי'];
+const MEMBERS = ['שני','יובל','ספיר','אלה','אייבי','ישראל','שגיא','אדר','אגם'];
+const ROLES = ['חובש','מנא','מטב'];
+const MISSIONS = {
+  ראשון:'מעצר בחרבתא', שני:'פטרול רגלי דיר קדיס',
+  שלישי:'שליפה לתחקור + חיפוק פטרול', רביעי:'שליפה לתחקור דיר אבו משאל',
+  חמישי:'פטרול רכוב שוקבא, דיר קדיס, נעלין, קיביא'
+};
+const STATUS_OPTS = [
+  {key:'present',label:'נוכח/ת',cls:'sel-present'},
+  {key:'away',   label:'לא נוכח/ת',cls:'sel-away'},
+  {key:'after',  label:'אחרי תורנות',cls:'sel-after'},
+  {key:'line',   label:'סבב קו',cls:'sel-line'},
+  {key:'leave',  label:'חופש',cls:'sel-away'},
+];
+const KEY_HEB = {present:'נוכח',away:'לא נוכח',after:'אחרי תורנות',line:'סבב קו',leave:'חופש'};
+const HEB_KEY = {};
+Object.entries(KEY_HEB).forEach(([k,v])=>HEB_KEY[v.trim()]=k);
+
+// Sheets layout:
+// Sheet1!A1:H10  → Attendance (row1=header, rows2-10=members, cols A=name B-H=days)
+// Sheet1!A12:E17 → Duty (row12=header, rows13-17=workdays, cols A=day B=חובש C=מנא D=מטב E=mission)
+// Sheet1!A19:H20 → Medic (row19=header days, row20=values)
+
+// ============ STATE ============
+let token = '';
+let attendance = {};
+let duty = {};
+let medic = {};
+let selectedPerson = null;
+let daySel = {};
+
+// ============ AUTH ============
+function init() {
+  const saved = sessionStorage.getItem('gsheets_token');
+  if (saved) { token = saved; showApp(); }
+  else showAuth();
+}
+
+function showAuth() {
+  document.getElementById('authScreen').style.display = 'block';
+  document.getElementById('appScreen').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  setWeekBadge();
+  loadFromSheets();
+}
+
+function connectToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { alert('הכנס token תחילה'); return; }
+  token = t;
+  sessionStorage.setItem('gsheets_token', t);
+  showApp();
+}
+
+function logout() {
+  sessionStorage.removeItem('gsheets_token');
+  token = '';
+  showAuth();
+}
+
+// ============ SHEETS API ============
+async function sheetsGet(range) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`;
+  const r = await fetch(url, {headers:{Authorization:`Bearer ${token}`}});
+  if (!r.ok) throw new Error('Sheets read error: ' + r.status);
+  const d = await r.json();
+  return d.values || [];
+}
+
+async function sheetsUpdate(range, values) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`;
+  const r = await fetch(url, {
+    method:'PUT',
+    headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},
+    body: JSON.stringify({range, majorDimension:'ROWS', values})
+  });
+  if (!r.ok) throw new Error('Sheets write error: ' + r.status);
+}
+
+async function sheetsBatchUpdate(data) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
+  const r = await fetch(url, {
+    method:'POST',
+    headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},
+    body: JSON.stringify({valueInputOption:'RAW', data})
+  });
+  if (!r.ok) throw new Error('Sheets batch error: ' + r.status);
+}
+
+// ============ LOAD ============
+async function loadFromSheets() {
+  setSyncState('syncing','טוען...');
+  showLoading('טוען נתונים מ-Sheets...');
+  try {
+    // Try to read the full sheet first to understand layout
+    const rows = await sheetsGet('Sheet1!A1:I30');
+
+    // parse attendance: look for row with member names
+    // We write in a known layout so we read it back the same way
+    loadDefaults(); // start with defaults, overwrite with what we find
+
+    // Find attendance block (starts at row 0 if we wrote it)
+    // Row 0: header (,ראשון,שני,...,שבת)
+    // Rows 1-9: member rows
+    if (rows.length > 0) {
+      let attStart = -1, dutyStart = -1, medicStart = -1;
+      rows.forEach((row, i) => {
+        if (row[0] === 'נוכחות') attStart = i;
+        if (row[0] === 'כוננות') dutyStart = i;
+        if (row[0] === 'חובש_תורן') medicStart = i;
+      });
+
+      if (attStart >= 0) {
+        // next row is header (days), then member rows
+        const headerRow = rows[attStart+1] || [];
+        for (let r = attStart+2; r < rows.length && rows[r] && rows[r][0] && rows[r][0] !== 'כוננות'; r++) {
+          const name = rows[r][0];
+          if (!MEMBERS.includes(name)) continue;
+          attendance[name] = {};
+          DAYS.forEach((day, di) => {
+            const val = (rows[r][di+1]||'').trim();
+            attendance[name][day] = HEB_KEY[val] || '';
+          });
+        }
+      }
+
+      if (dutyStart >= 0) {
+        for (let r = dutyStart+2; r < rows.length && rows[r] && rows[r][0] && rows[r][0] !== 'חובש_תורן'; r++) {
+          const day = rows[r][0];
+          if (!WORK_DAYS.includes(day)) continue;
+          duty[day] = {חובש: rows[r][1]||'', מנא: rows[r][2]||'', מטב: rows[r][3]||''};
+        }
+      }
+
+      if (medicStart >= 0) {
+        const mRow = rows[medicStart+1] || [];
+        DAYS.forEach((day, di) => { medic[day] = mRow[di] || ''; });
+      }
+    }
+
+    setSyncState('ok','מסונכרן');
+  } catch(e) {
+    console.error(e);
+    if (e.message.includes('401')) {
+      setSyncState('err','Token פג תוקף');
+      showToast('Token פג תוקף — התנתק והכנס חדש', '#e74c3c');
+    } else {
+      setSyncState('err','שגיאת טעינה');
+      showToast('שגיאה בטעינה — עובד עם נתוני ברירת מחדל', '#f39c12');
+    }
+    loadDefaults();
+  }
+  hideLoading();
+  buildAll();
+}
+
+// ============ SAVE ============
+async function writeAllToSheets() {
+  setSyncState('syncing','שומר...');
+
+  // Build all data arrays
+  const attData = [
+    ['נוכחות'],
+    ['שם', ...DAYS],
+    ...MEMBERS.map(m => {
+      const row = attendance[m]||{};
+      return [m, ...DAYS.map(d => KEY_HEB[row[d]] || '')];
+    }),
+    []
+  ];
+
+  const dutyData = [
+    ['כוננות'],
+    ['יום','חובש','מנא','מטב','משימה'],
+    ...WORK_DAYS.map(d => {
+      const r = duty[d]||{};
+      return [d, r.חובש||'', r.מנא||'', r.מטב||'', MISSIONS[d]||''];
+    }),
+    []
+  ];
+
+  const medicData = [
+    ['חובש_תורן'],
+    DAYS.map(d => medic[d]||'')
+  ];
+
+  // Combine into one block
+  const allRows = [...attData, ...dutyData, ...medicData];
+  // pad rows to same width
+  const maxCols = Math.max(...allRows.map(r=>r.length));
+  const padded = allRows.map(r => { while(r.length < maxCols) r.push(''); return r; });
+
+  try {
+    await sheetsUpdate(`Sheet1!A1:${colLetter(maxCols)}${padded.length}`, padded);
+    setSyncState('ok','נשמר ✓');
+    return true;
+  } catch(e) {
+    console.error(e);
+    setSyncState('err','שגיאת שמירה');
+    if (e.message.includes('401')) showToast('Token פג תוקף', '#e74c3c');
+    else showToast('שגיאה בשמירה', '#e74c3c');
+    return false;
+  }
+}
+
+function colLetter(n) {
+  let s = '';
+  while(n > 0) { s = String.fromCharCode(65+(n-1)%26) + s; n = Math.floor((n-1)/26); }
+  return s;
+}
+
+// ============ DEFAULTS ============
+function loadDefaults() {
+  attendance = {
+    'שני':   {ראשון:'present',שני:'present',שלישי:'present',רביעי:'present',חמישי:'present',שישי:'after',שבת:'after'},
+    'יובל':  {ראשון:'',שני:'present',שלישי:'present',רביעי:'present',חמישי:'present',שישי:'after',שבת:'after'},
+    'ספיר':  {ראשון:'',שני:'',שלישי:'',רביעי:'',חמישי:'',שישי:'',שבת:''},
+    'אלה':   {ראשון:'present',שני:'away',שלישי:'present',רביעי:'away',חמישי:'away',שישי:'line',שבת:'line'},
+    'אייבי': {ראשון:'present',שני:'present',שלישי:'present',רביעי:'present',חמישי:'present',שישי:'present',שבת:'present'},
+    'ישראל': {ראשון:'present',שני:'present',שלישי:'present',רביעי:'present',חמישי:'present',שישי:'present',שבת:'present'},
+    'שגיא':  {ראשון:'present',שני:'present',שלישי:'present',רביעי:'present',חמישי:'present',שישי:'present',שבת:'present'},
+    'אדר':   {ראשון:'',שני:'',שלישי:'',רביעי:'',חמישי:'',שישי:'',שבת:''},
+    'אגם':   {ראשון:'away',שני:'away',שלישי:'away',רביעי:'away',חמישי:'away',שישי:'away',שבת:'away'},
+  };
+  duty = {
+    ראשון:{חובש:'ישראל',מנא:'אייבי',מטב:'דוק'}, שני:{חובש:'אייבי',מנא:'יובל',מטב:'דוק'},
+    שלישי:{חובש:'מאיה',מנא:'שני',מטב:'דוק'}, רביעי:{חובש:'שגיא',מנא:'אייבי',מטב:'דוק'},
+    חמישי:{חובש:'שגיא',מנא:'אייבי',מטב:'דוק'},
+  };
+  medic = {ראשון:'יובל',שני:'שגיא',שלישי:'אדר',רביעי:'מאיה',חמישי:'אדר',שישי:'ישראל',שבת:'שגיא'};
+}
+
+// ============ UI STATE ============
+function setSyncState(state, label) {
+  document.getElementById('syncDot').className = 'sync-dot '+state;
+  document.getElementById('syncLabel').textContent = label;
+}
+function showLoading(msg) {
+  document.getElementById('loadingMsg').textContent = msg;
+  document.getElementById('loadingOverlay').style.display = 'flex';
+}
+function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = color||'var(--green)';
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+}
+function setWeekBadge() {
+  const now = new Date();
+  const sun = new Date(now); sun.setDate(now.getDate()-now.getDay());
+  const sat = new Date(sun); sat.setDate(sun.getDate()+6);
+  const fmt = d=>`${d.getDate()}/${d.getMonth()+1}`;
+  document.getElementById('weekBadge').textContent = `${fmt(sun)}–${fmt(sat)}`;
+}
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if (name==='view') renderViewAll();
+}
+
+// ============ ATTENDANCE ============
+function buildPersonGrid() {
+  document.getElementById('personGrid').innerHTML = MEMBERS.map(m=>
+    `<div class="person-chip ${selectedPerson===m?'sel':''}" onclick="selectPerson('${m}')">${m}</div>`
+  ).join('');
+}
+function selectPerson(name) { selectedPerson=name; buildPersonGrid(); }
+
+function startWizard() {
+  if (!selectedPerson) { showToast('בחר/י איש צוות','#e74c3c'); return; }
+  daySel = {...(attendance[selectedPerson]||{})};
+  document.getElementById('wizardPersonLabel').textContent = selectedPerson;
+  document.getElementById('dayRows').innerHTML = DAYS.map(day=>`
+    <div class="day-row">
+      <div class="day-label">${day}</div>
+      <div class="status-btns">
+        ${STATUS_OPTS.map(o=>`
+          <button class="status-btn ${daySel[day]===o.key?o.cls:''}"
+            onclick="setDay('${day}','${o.key}','${o.cls}',this)">${o.label}</button>
+        `).join('')}
+      </div>
+    </div>`).join('');
+  document.getElementById('att-step1').classList.remove('active');
+  document.getElementById('att-step2').classList.add('active');
+}
+
+function setDay(day,key,cls,btn) {
+  daySel[day]=key;
+  btn.closest('.day-row').querySelectorAll('.status-btn').forEach(b=>b.className='status-btn');
+  btn.classList.add(cls);
+}
+
+async function saveAttendance() {
+  attendance[selectedPerson]={...daySel};
+  renderAttTable(); goBackWizard();
+  setBtnLoading('saveAttBtn', true);
+  const ok = await writeAllToSheets();
+  setBtnLoading('saveAttBtn', false);
+  if (ok) showToast(`✓ לו"ז ${selectedPerson} נשמר`);
+}
+
+function goBackWizard() {
+  document.getElementById('att-step2').classList.remove('active');
+  document.getElementById('att-step1').classList.add('active');
+}
+
+function renderAttTable() {
+  document.getElementById('attHead').innerHTML = `<th>שם</th>`+DAYS.map(d=>`<th>${d}</th>`).join('');
+  document.getElementById('attBody').innerHTML = MEMBERS.map(m=>{
+    const row=attendance[m]||{};
+    return `<tr><td style="font-weight:600;text-align:right">${m}</td>${DAYS.map(d=>`<td>${badge(row[d])}</td>`).join('')}</tr>`;
+  }).join('');
+}
+
+function badge(k) {
+  const m={present:'<span class="badge badge-present">נוכח</span>',away:'<span class="badge badge-away">לא נוכח</span>',after:'<span class="badge badge-after">אחרי תורנות</span>',line:'<span class="badge badge-line">סבב קו</span>',leave:'<span class="badge badge-away">חופש</span>'};
+  return m[k]||'<span class="badge-empty">—</span>';
+}
+
+// ============ DUTY ============
+function buildDutyGrid() {
+  document.getElementById('dutyGrid').innerHTML = WORK_DAYS.map(day=>`
+    <div class="duty-day-card">
+      <div class="duty-day-header">
+        ${day}
+        ${MISSIONS[day]?`<span class="mission-tag">${MISSIONS[day]}</span>`:''}
+      </div>
+      <div class="duty-roles">${ROLES.map(r=>`
+        <div>
+          <label>${r}</label>
+          <input type="text" id="duty-${day}-${r}" value="${(duty[day]||{})[r]||''}" placeholder="שם">
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+async function saveDuty() {
+  WORK_DAYS.forEach(day=>{ duty[day]={}; ROLES.forEach(r=>{ duty[day][r]=document.getElementById(`duty-${day}-${r}`).value; }); });
+  renderDutyTable();
+  setBtnLoading('saveDutyBtn', true);
+  const ok = await writeAllToSheets();
+  setBtnLoading('saveDutyBtn', false);
+  if (ok) showToast('✓ שיבוץ כוננות נשמר');
+}
+
+function renderDutyTable() {
+  document.getElementById('dutyHead').innerHTML = `<th>יום</th><th>משימה</th>`+ROLES.map(r=>`<th>${r}</th>`).join('');
+  document.getElementById('dutyBody').innerHTML = WORK_DAYS.map(day=>`
+    <tr><td style="font-weight:600">${day}</td><td style="font-size:11px;color:var(--muted)">${MISSIONS[day]||'—'}</td>${ROLES.map(r=>`<td>${(duty[day]||{})[r]||'—'}</td>`).join('')}</tr>`).join('');
+}
+
+// ============ MEDIC ============
+function buildMedicGrid() {
+  document.getElementById('medicGrid').innerHTML = DAYS.map(day=>`
+    <div class="duty-day-card">
+      <div class="duty-day-header">${day}</div>
+      <div style="max-width:220px">
+        <label>חובש/ת תורן/ת</label>
+        <input type="text" id="medic-${day}" value="${medic[day]||''}" placeholder="שם">
+      </div>
+    </div>`).join('');
+}
+
+async function saveMedic() {
+  DAYS.forEach(d=>{ medic[d]=document.getElementById(`medic-${d}`).value; });
+  renderMedicTable();
+  setBtnLoading('saveMedicBtn', true);
+  const ok = await writeAllToSheets();
+  setBtnLoading('saveMedicBtn', false);
+  if (ok) showToast('✓ חובש תורן נשמר');
+}
+
+function renderMedicTable() {
+  document.getElementById('medicHead').innerHTML = DAYS.map(d=>`<th>${d}</th>`).join('');
+  document.getElementById('medicBody').innerHTML = `<tr>${DAYS.map(d=>`<td style="font-weight:600">${medic[d]||'—'}</td>`).join('')}</tr>`;
+}
+
+// ============ VIEW ALL ============
+function renderViewAll() {
+  const total = Object.values(attendance).reduce((s,r)=>s+Object.values(r).filter(v=>v==='present').length,0);
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="stat-box"><div class="stat-val">${MEMBERS.length}</div><div class="stat-lbl">חברי צוות</div></div>
+    <div class="stat-box"><div class="stat-val">${total}</div><div class="stat-lbl">ימי נוכחות</div></div>
+    <div class="stat-box"><div class="stat-val">${WORK_DAYS.filter(d=>(duty[d]||{}).חובש).length}/5</div><div class="stat-lbl">כוננות</div></div>
+    <div class="stat-box"><div class="stat-val">${DAYS.filter(d=>medic[d]).length}/7</div><div class="stat-lbl">חובש תורן</div></div>`;
+
+  document.getElementById('vAttHead').innerHTML = `<th>שם</th>`+DAYS.map(d=>`<th>${d}</th>`).join('');
+  document.getElementById('vAttBody').innerHTML = MEMBERS.map(m=>{
+    const row=attendance[m]||{};
+    return `<tr><td style="font-weight:600;text-align:right">${m}</td>${DAYS.map(d=>`<td>${badge(row[d])}</td>`).join('')}</tr>`;
+  }).join('');
+
+  document.getElementById('vDutyHead').innerHTML = `<th>יום</th>`+ROLES.map(r=>`<th>${r}</th>`).join('');
+  document.getElementById('vDutyBody').innerHTML = WORK_DAYS.map(d=>`
+    <tr><td style="font-weight:600">${d}</td>${ROLES.map(r=>`<td>${(duty[d]||{})[r]||'—'}</td>`).join('')}</tr>`).join('');
+
+  document.getElementById('vMedicHead').innerHTML = DAYS.map(d=>`<th>${d}</th>`).join('');
+  document.getElementById('vMedicBody').innerHTML = `<tr>${DAYS.map(d=>`<td style="font-weight:600">${medic[d]||'—'}</td>`).join('')}</tr>`;
+}
+
+// ============ BUILD ============
+function buildAll() {
+  buildPersonGrid(); buildDutyGrid(); buildMedicGrid();
+  renderAttTable(); renderDutyTable(); renderMedicTable();
+}
+
+function setBtnLoading(id, loading) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? '⏳ שומר...' : '💾 שמור';
+}
+
+init();
+</script>
+</body>
+</html>
