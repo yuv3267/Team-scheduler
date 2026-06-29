@@ -74,11 +74,13 @@ main{padding:14px;max-width:1100px;margin:0 auto}
 .cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .dr{display:grid;grid-template-columns:85px 1fr;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--br)}
 .dr:last-child{border-bottom:none}
-.avbtns{display:flex;gap:6px;flex-wrap:wrap}
-.avbtn{padding:8px 14px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;font-weight:500}
+.avbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.avbtn{padding:10px 4px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;font-weight:500;text-align:center;width:100%}
 .avbtn.sp{background:#1a3d28;border-color:var(--gr);color:var(--gr)}
-.avbtn.sx{background:#3d2e10;border-color:var(--ye);color:var(--ye)}
+.avbtn.sx{background:rgba(79,142,247,.15);border-color:var(--ac);color:var(--ac)}
 .avbtn.sa{background:#3d2020;border-color:var(--re);color:var(--re)}
+.av-note{width:100%;margin-top:6px;background:var(--bg);border:1px solid var(--br);border-radius:8px;color:var(--tx);font-family:'Rubik',sans-serif;font-size:13px;padding:7px 10px;outline:none;display:none}
+.av-note.show{display:block}
 /* DUTY / MEDIC */
 .dday{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px}
 .ddayh{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--br);color:var(--ac);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -416,8 +418,9 @@ var SLOTS=['חובש_1','חובש_2','מנא','מטב'];
 var SLBL={'חובש_1':'חובש 1','חובש_2':'חובש 2','מנא':'מנא','מטב':'מטב'};
 var DEF_MSN={ראשון:'מעצר בחרבתא',שני:'פטרול רגלי',שלישי:'שליפה + חיפוק',רביעי:'שליפה דיר אבו משאל',חמישי:'פטרול רכוב'};
 var RCOL={חובש:'#2ecc71',מנא:'#4f8ef7',מטב:'#f39c12'};
-var AVCOL={present:'#2ecc71',partial:'#f39c12',away:'#e74c3c',after:'#f39c12'};
-var AVOPTS=[{k:'present',l:'זמין',c:'sp'},{k:'partial',l:'חלקי',c:'sx'},{k:'after',l:'אחרי תורנות',c:'sx'},{k:'away',l:'לא זמין',c:'sa'}];
+var AVCOL={base:'#2ecc71',home:'#4f8ef7',other:'#f39c12'};
+var AVOPTS=[{k:'base',l:'בסיס',c:'sp'},{k:'home',l:'בית',c:'sx'},{k:'other',l:'אחר',c:'sa'}];
+var AVNOTE={other:true}; // keys that allow notes
 
 var G={members:{},avail:{},duty:{},medic:{},missions:{},events:{},notifs:{},
   me:null,selP:null,avSel:{},role:'',adminUnlocked:false,
@@ -449,13 +452,14 @@ function listen(){
 
 // ── HELPERS ──
 function isAdmin(){return G.me&&!G.me.guest&&G.members[G.me.uid]&&G.members[G.me.uid].admin;}
-function avCol(uid,day){return AVCOL[(G.avail[uid]||{})[day]]||'#7880a0';}
-function avKey(uid,day){return (G.avail[uid]||{})[day]||'';}
+function avKey(uid,day){var v=(G.avail[uid]||{})[day];if(!v)return'';return typeof v==='object'?v.k:v;}function avNote(uid,day){var v=(G.avail[uid]||{})[day];return(v&&typeof v==='object')?(v.note||''):'';}
+function avCol(uid,day){return AVCOL[avKey(uid,day)]||'#7880a0';}
+
 function mName(uid){return uid&&G.members[uid]?G.members[uid].name:'—';}
 function getMsn(day){return G.missions[day]||DEF_MSN[day]||'';}
 function assigned(day){var ids=Object.values(G.duty[day]||{}).filter(Boolean);if(G.medic[day])ids.push(G.medic[day]);return ids;}
-function warnReason(uid,day){var k=avKey(uid,day);if(!k)return 'לא הוגדרה זמינות';if(k==='away')return 'מסומן/ת כלא זמין/ה';if(k==='after')return 'אחרי תורנות';if(k==='partial')return 'זמין/ה חלקית';return null;}
-function avBdg(k){var m={present:'<span class="b bp">זמין</span>',away:'<span class="b ba">לא זמין</span>',partial:'<span class="b bx">חלקי</span>',after:'<span class="b bx">אחרי תורנות</span>'};return m[k]||'<span class="be">—</span>';}
+function warnReason(uid,day){var k=avKey(uid,day);if(!k)return 'לא הוגדרה זמינות';if(k==='home')return 'בבית';if(k==='other')return 'סיבה אחרת ('+avNote(uid,day)+')';return null;}
+function avBdg(uid,day){var k=avKey(uid,day),note=avNote(uid,day);var labels={base:'בסיס',home:'בית',other:'אחר'};if(!k)return'<span class="be">—</span>';var col={base:'bp',home:'bl',other:'bx'}[k]||'be';return'<span class="b '+col+'">'+(labels[k]||k)+(note?' · '+note:'')+'</span>';}
 function toast(msg,c){var t=document.getElementById('T');t.textContent=msg;t.style.background=c||'var(--gr)';t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
 function openModal(id){document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
@@ -523,11 +527,44 @@ function doDelete(){if(!G.deleteUid)return;db.ref('members/'+G.deleteUid).remove
 // ── AVAILABILITY ──
 function buildPG(){var g=document.getElementById('PG');if(!g)return;if(G.me.guest){g.innerHTML='<p style="color:var(--mu);font-size:13px;padding:8px">אורחים אינם יכולים לשנות זמינות</p>';return;}var admin=isAdmin(),ks=Object.keys(G.members).filter(function(uid){return admin||uid===G.me.uid;});if(!admin&&ks.length===1&&!G.selP)G.selP=ks[0];g.innerHTML=ks.map(function(uid){var m=G.members[uid];return '<div class="pc'+(G.selP===uid?' on':'')+'" onclick="selPers(\''+uid+'\')">'+'<div class="cdot" style="background:'+avCol(uid,DAYS[0])+'"></div>'+'<span style="font-size:13px;font-weight:500">'+m.name+'</span>'+'<span style="font-size:11px;color:var(--mu)">'+m.role+'</span></div>';}).join('');}
 function selPers(uid){G.selP=uid;buildPG();}
-function startAv(){if(!G.selP){toast('בחר/י חבר צוות','#e74c3c');return;}G.avSel=Object.assign({},(G.avail[G.selP]||{}));document.getElementById('AVL').textContent=G.members[G.selP]?G.members[G.selP].name:'';document.getElementById('ADR').innerHTML=DAYS.map(function(day){return '<div class="dr"><div style="font-size:13px;font-weight:500">'+day+'</div><div class="avbtns">'+AVOPTS.map(function(o){return '<button class="avbtn'+(G.avSel[day]===o.k?' '+o.c:'')+'" onclick="setAvD(\''+day+'\',\''+o.k+'\',\''+o.c+'\',this)">'+o.l+'</button>';}).join('')+'</div></div>';}).join('');document.getElementById('av1').classList.remove('on');document.getElementById('av2').classList.add('on');}
-function setAvD(day,k,c,btn){G.avSel[day]=k;btn.closest('.dr').querySelectorAll('.avbtn').forEach(function(b){b.className='avbtn';});btn.classList.add(c);}
+function startAv(){
+  if(!G.selP){toast('בחר/י חבר צוות','#e74c3c');return;}
+  G.avSel=Object.assign({},(G.avail[G.selP]||{}));
+  document.getElementById('AVL').textContent=G.members[G.selP]?G.members[G.selP].name:'';
+  document.getElementById('ADR').innerHTML=DAYS.map(function(day){
+    var cur=G.avSel[day]||{};
+    var curK=typeof cur==='string'?cur:(cur.k||'');
+    var curNote=typeof cur==='object'?cur.note||'':'';
+    return '<div class="dr" id="dr_'+day+'">'
+      +'<div style="font-size:13px;font-weight:500">'+day+'</div>'
+      +'<div>'
+      +'<div class="avbtns">'+AVOPTS.map(function(o){
+        return '<button class="avbtn'+(curK===o.k?' '+o.c:'')+'" onclick="setAvD(\''+day+'\',\''+o.k+'\',\''+o.c+'\',this)">'+o.l+'</button>';
+      }).join('')+'</div>'
+      +'<input class="av-note'+(curK==='other'?' show':'')+'" id="avnote_'+day+'" placeholder="הערה..." value="'+curNote+'">'
+      +'</div></div>';
+  }).join('');
+  document.getElementById('av1').classList.remove('on');
+  document.getElementById('av2').classList.add('on');
+}
+function setAvD(day,k,c,btn){
+  btn.closest('.avbtns').querySelectorAll('.avbtn').forEach(function(b){b.className='avbtn';});
+  btn.classList.add(c);
+  var noteEl=document.getElementById('avnote_'+day);
+  if(noteEl){if(k==='other'){noteEl.classList.add('show');}else{noteEl.classList.remove('show');noteEl.value='';}}
+  G.avSel[day]=k==='other'?{k:'other',note:''}:k;
+}
+function saveAv(){
+  // collect notes for 'other' days
+  DAYS.forEach(function(day){
+    var noteEl=document.getElementById('avnote_'+day);
+    if(noteEl&&noteEl.classList.contains('show')){G.avSel[day]={k:'other',note:noteEl.value.trim()};}
+  });
+  fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});
+}
 function saveAv(){fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});}
 function backAv(){document.getElementById('av2').classList.remove('on');document.getElementById('av1').classList.add('on');}
-function renderAvT(){document.getElementById('avH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('avB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(r[d])+'</td>';}).join('')+'</tr>';}).join('');}
+function renderAvT(){document.getElementById('avH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('avB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(uid,d)+'</td>';}).join('')+'</tr>';}).join('');}
 
 // ── PICKER ──
 function allowedRoles(slot){if(slot==='מטב')return['מטב'];if(slot==='מנא')return['מנא'];return['חובש','מנא'];}
@@ -696,10 +733,12 @@ function parseAndSave(){
 function buildMySchedule(){
   var c=document.getElementById('mySchedule');if(!c)return;
   if(G.me&&G.me.guest){c.innerHTML='<p style="color:var(--mu);font-size:13px">אורח — אין לו"ז אישי</p>';return;}
+  var myEvs=[];
   var html='';
   DAYS.forEach(function(day){
     var evs=getSortedEvents(day).filter(function(item){return isMyEvent(item.ev);});
     if(!evs.length)return;
+    evs.forEach(function(item){myEvs.push({day:day,ev:item.ev});});
     html+='<div style="margin-bottom:10px"><div style="font-size:12px;font-weight:600;color:var(--ac);margin-bottom:5px">'+day+'</div>';
     html+=evs.map(function(item){var e=item.ev;
       return '<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--br)">'
@@ -710,7 +749,80 @@ function buildMySchedule(){
     }).join('');
     html+='</div>';
   });
-  c.innerHTML=html||'<p style="color:var(--mu);font-size:13px">אין אירועים רלוונטיים השבוע</p>';
+  if(!html){c.innerHTML='<p style="color:var(--mu);font-size:13px">אין אירועים רלוונטיים השבוע</p>';return;}
+  // Add to Calendar button
+  html+='<button onclick="exportToCalendar()" style="margin-top:10px;width:100%;padding:10px;border-radius:9px;border:none;background:var(--ac);color:#fff;font-family:\'Rubik\',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span>📅</span><span>הוסף הכל ל-Google Calendar</span></button>';
+  c.innerHTML=html;
+}
+
+function exportToCalendar(){
+  // Get the Sunday of current week
+  var now=new Date();
+  var sunday=new Date(now);sunday.setDate(now.getDate()-now.getDay());sunday.setHours(0,0,0,0);
+
+  var dayOffset={ראשון:0,שני:1,שלישי:2,רביעי:3,חמישי:4,שישי:5,שבת:6};
+
+  var eventsToAdd=[];
+  DAYS.forEach(function(day){
+    var evs=getSortedEvents(day).filter(function(item){return isMyEvent(item.ev);});
+    evs.forEach(function(item){
+      var e=item.ev;
+      var offset=dayOffset[day]||0;
+      var evDate=new Date(sunday);evDate.setDate(sunday.getDate()+offset);
+      eventsToAdd.push({title:e.title,date:evDate,time:e.time||'',note:e.note||''});
+    });
+  });
+
+  if(!eventsToAdd.length){toast('אין אירועים להוסיף','#e74c3c');return;}
+
+  // Open each event in Google Calendar (one by one, user confirms each)
+  // For multiple events we open them sequentially
+  var opened=0;
+  function openNext(){
+    if(opened>=eventsToAdd.length){toast('✓ כל האירועים נשלחו ל-Google Calendar');return;}
+    var ev=eventsToAdd[opened];opened++;
+    var gcUrl=buildGcalUrl(ev);
+    window.open(gcUrl,'_blank');
+    // Small delay between opens to avoid popup blocker
+    if(opened<eventsToAdd.length){setTimeout(openNext,800);}
+    else{toast('✓ '+eventsToAdd.length+' אירועים נשלחו ל-Google Calendar');}
+  }
+  openNext();
+}
+
+function buildGcalUrl(ev){
+  var d=ev.date;
+  function pad(n){return('0'+n).slice(-2);}
+  var dateStr=d.getFullYear()+''+pad(d.getMonth()+1)+''+pad(d.getDate());
+
+  var startStr,endStr;
+  if(ev.time){
+    // parse time range "08:00–10:00" or single "08:00"
+    var parts=ev.time.replace('–','-').split('-');
+    var t1=parts[0].trim().replace(':','');
+    var t2=parts[1]?parts[1].trim().replace(':',''):null;
+    // pad to 6 digits (HHMMSS)
+    while(t1.length<4)t1=t1+'0';t1=t1+'00';
+    startStr=dateStr+'T'+t1;
+    if(t2){while(t2.length<4)t2=t2+'0';t2=t2+'00';endStr=dateStr+'T'+t2;}
+    else{
+      // default 1 hour duration
+      var sh=parseInt(t1.slice(0,2)),sm=parseInt(t1.slice(2,4));
+      var eh=sh+1;
+      endStr=dateStr+'T'+pad(eh)+pad(sm)+'00';
+    }
+  } else {
+    // all day
+    startStr=dateStr;endStr=dateStr;
+  }
+
+  var params=new URLSearchParams({
+    action:'TEMPLATE',
+    text:ev.title,
+    dates:startStr+'/'+endStr,
+    details:ev.note||''
+  });
+  return 'https://calendar.google.com/calendar/render?'+params.toString();
 }
 
 // ── MY DUTY ──
@@ -749,7 +861,7 @@ function markAllRead(){
 function buildMG(){var g=document.getElementById('MG');if(!g)return;var ks=Object.keys(G.members);var admin=isAdmin();g.innerHTML=ks.length?ks.map(function(uid){var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';var isSelf=uid===G.me.uid;return '<div class="mc"><div class="mav2" style="background:'+col+'">'+m.name[0]+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div><div style="font-size:11px;color:var(--mu);margin-top:2px">'+m.phone+' · מ"א '+m.id+'</div><div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span>'+(isSelf?'<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-family:\'Rubik\',sans-serif;font-size:11px;cursor:pointer" onclick="openProfile()">✏️ ערוך</button>':'')+(admin&&!isSelf?'<button class="del-btn" onclick="confirmDelete(\''+uid+'\')">🗑️ מחק</button>':'')+'</div></div></div>';}).join(''):'<p style="color:var(--mu);text-align:center;padding:20px;font-size:13px">אין חברי צוות</p>';}
 
 // ── VIEW ALL ──
-function renderVw(){var mc=Object.keys(G.members).length,ac=Object.values(G.avail).reduce(function(s,r){return s+Object.values(r).filter(function(v){return v==='present';}).length;},0);document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div><div class="sb2"><div class="sv">'+ac+'</div><div class="sl2">ימי זמינות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';document.getElementById('vH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(r[d])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';}
+function renderVw(){var mc=Object.keys(G.members).length,ac=Object.values(G.avail).reduce(function(s,r){return s+Object.values(r).filter(function(v){return v==='base';}).length;},0);document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div><div class="sb2"><div class="sv">'+ac+'</div><div class="sl2">ימי זמינות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';document.getElementById('vH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(uid,d)+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';}
 
 checkAutoLogin();
 </script>
