@@ -130,6 +130,10 @@ tr:hover td{background:var(--s2)}
 .ev-act{padding:3px 9px;border-radius:5px;border:1px solid var(--br);background:transparent;color:var(--mu);font-family:'Rubik',sans-serif;font-size:10px;cursor:pointer}
 .ev-act:hover{border-color:var(--ac);color:var(--tx)}
 .ev-act.red{border-color:var(--re);color:var(--re)}
+.sday.today{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.sday.today .sdayh{background:rgba(79,142,247,.1)}
+.today-badge{font-size:9px;background:var(--ac);color:#fff;border-radius:4px;padding:1px 6px;margin-right:6px}
+.nbadge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;border-radius:9px;background:var(--re);color:#fff;font-size:10px;font-weight:700;padding:0 4px;margin-right:5px}
 .sched-empty{font-size:12px;color:var(--mu);padding:10px 14px;text-align:center}
 /* PERSONAL */
 .pers-header{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s2);border-radius:12px;margin-bottom:14px;border:1px solid var(--br)}
@@ -341,6 +345,7 @@ tr:hover td{background:var(--s2)}
   <div class="mbox"><h3>✏️ עריכת פרופיל</h3>
     <div class="fi"><label>שם מלא</label><input id="pn" type="text"></div>
     <div class="fi"><label>טלפון</label><input id="pp" type="text"></div>
+    <div class="fi"><label>מייל (ליומן)</label><input id="pe" type="email" placeholder="name@gmail.com"></div>
     <div class="fi"><label>תפקיד</label><div class="rgrid"><button id="prb0" onclick="pRole('חובש',0)">חובש</button><button id="prb1" onclick="pRole('מנא',1)">מנא</button><button id="prb2" onclick="pRole('מטב',2)">מטב</button></div></div>
     <div class="mbtns"><button class="mbcan" onclick="closeModal('PM')">ביטול</button><button class="mbok" onclick="saveProfile()">שמור</button></div>
   </div>
@@ -464,6 +469,12 @@ function toast(msg,c){var t=document.getElementById('T');t.textContent=msg;t.sty
 function openModal(id){document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
 function timeToMins(t){if(!t)return 0;var m=t.match(/(\d{1,2}):(\d{2})/);return m?parseInt(m[1])*60+parseInt(m[2]):0;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function todayName(){return DAYS[new Date().getDay()];}
+// debounced render — listeners fire in bursts on load
+var _rT=null;
+function renderAll(){if(_rT)clearTimeout(_rT);_rT=setTimeout(_renderAllNow,60);}
+function _renderAllNow(){buildPG();buildDD();buildMD();buildMG();renderAvT();renderDuT();renderMeT();buildMyDuty();buildMySchedule();}
 function fillDaySelect(id,val){var s=document.getElementById(id);s.innerHTML=DAYS.map(function(d){return '<option value="'+d+'"'+(d===val?' selected':'')+'>'+d+'</option>';}).join('');}
 
 // ── AUTH ──
@@ -514,12 +525,11 @@ function startApp(){
   listen();goTab(0);
 }
 function goTab(i){for(var j=0;j<6;j++){document.getElementById('nt'+j).classList.remove('on');document.getElementById('p'+j).classList.remove('on');}document.getElementById('nt'+i).classList.add('on');document.getElementById('p'+i).classList.add('on');if(i===5)renderVw();}
-function renderAll(){buildPG();buildDD();buildMD();buildMG();renderAvT();renderDuT();renderMeT();buildMyDuty();buildMySchedule();}
 
 // ── PROFILE ──
-function openProfile(){var m=G.members[G.me.uid];if(!m)return;document.getElementById('pn').value=m.name;document.getElementById('pp').value=m.phone;G.editRole=m.role;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');var ri={חובש:0,מנא:1,מטב:2}[m.role];if(ri!==undefined)document.getElementById('prb'+ri).classList.add('on');openModal('PM');}
+function openProfile(){var m=G.members[G.me.uid];if(!m)return;document.getElementById('pn').value=m.name;document.getElementById('pp').value=m.phone;document.getElementById('pe').value=m.email||'';G.editRole=m.role;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');var ri={חובש:0,מנא:1,מטב:2}[m.role];if(ri!==undefined)document.getElementById('prb'+ri).classList.add('on');openModal('PM');}
 function pRole(r,i){G.editRole=r;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');document.getElementById('prb'+i).classList.add('on');}
-function saveProfile(){var n=document.getElementById('pn').value.trim(),p=document.getElementById('pp').value.trim();if(!n||!p||!G.editRole){toast('יש למלא את כל השדות','#e74c3c');return;}var uid=G.me.uid;G.members[uid].name=n;G.members[uid].phone=p;G.members[uid].role=G.editRole;G.me.name=n;G.me.role=G.editRole;fbSet('members/'+uid,G.members[uid],function(){document.getElementById('UAV').textContent=n[0];document.getElementById('UAV').style.background=RCOL[G.editRole]||'var(--mu)';document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');document.getElementById('persName').textContent=n;renderAll();closeModal('PM');toast('✓ פרופיל עודכן');});}
+function saveProfile(){var n=document.getElementById('pn').value.trim(),p=document.getElementById('pp').value.trim(),em=document.getElementById('pe').value.trim();if(!n||!p||!G.editRole){toast('יש למלא שם, טלפון ותפקיד','#e74c3c');return;}var uid=G.me.uid;G.members[uid].name=n;G.members[uid].phone=p;G.members[uid].role=G.editRole;G.members[uid].email=em;G.me.name=n;G.me.role=G.editRole;fbSet('members/'+uid,G.members[uid],function(){document.getElementById('UAV').textContent=n[0];document.getElementById('UAV').style.background=RCOL[G.editRole]||'var(--mu)';document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');document.getElementById('persName').textContent=n;renderAll();closeModal('PM');toast('✓ פרופיל עודכן');});}
 function doUpgrade(){if(document.getElementById('ucode').value.trim()!==ADMIN_CODE){toast('קוד שגוי','#e74c3c');return;}if(!G.me||G.me.guest){toast('יש להתחבר','#e74c3c');return;}G.members[G.me.uid].admin=true;fbSet('members/'+G.me.uid+'/admin',true,function(){document.getElementById('UN').textContent=G.me.name+' 👑';document.getElementById('nt2').style.display='';document.getElementById('upgBtn').style.display='none';document.getElementById('schedAdminBtns').style.display='flex';closeModal('UM');toast('✓ שודרגת לאדמין!');renderAll();});}
 function confirmDelete(uid){G.deleteUid=uid;document.getElementById('DMT').textContent='האם למחוק את '+G.members[uid].name+'? פעולה זו אינה הפיכה.';openModal('DM');}
 function doDelete(){if(!G.deleteUid)return;db.ref('members/'+G.deleteUid).remove();db.ref('avail/'+G.deleteUid).remove();delete G.members[G.deleteUid];delete G.avail[G.deleteUid];closeModal('DM');renderAll();toast('✓ משתמש נמחק');}
@@ -562,7 +572,6 @@ function saveAv(){
   });
   fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});
 }
-function saveAv(){fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});}
 function backAv(){document.getElementById('av2').classList.remove('on');document.getElementById('av1').classList.add('on');}
 function renderAvT(){document.getElementById('avH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('avB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(uid,d)+'</td>';}).join('')+'</tr>';}).join('');}
 
@@ -629,7 +638,7 @@ function getSortedEvents(day){
 }
 function buildSched(){
   var c=document.getElementById('SCHED');if(!c)return;
-  var admin=isAdmin();
+  var admin=isAdmin();var tdy=todayName();
   c.innerHTML=DAYS.map(function(day){
     var evs=getSortedEvents(day);
     var evHtml=evs.length?evs.map(function(item){
@@ -640,14 +649,16 @@ function buildSched(){
       var shiftBtn=admin?'<button class="ev-act" onclick="openShift(\''+item.id+'\')">⏰ שנה שעה</button>':'';
       var unames=evUserNames(e);
       return '<div class="sev '+cls+'">'
-        +(e.time?'<div class="ev-time">🕐 '+e.time+(e.timeChanged?'<span class="ev-changed-badge">שעה שונתה</span>':'')+'</div>':'')
-        +'<div class="ev-title">'+e.title+'</div>'
-        +(unames?'<div class="ev-users">👤 '+unames+'</div>':'')
-        +(e.note?'<div class="ev-note">'+e.note+'</div>':'')
+        +(e.time?'<div class="ev-time">🕐 '+esc(e.time)+(e.timeChanged?'<span class="ev-changed-badge">שעה שונתה</span>':'')+'</div>':'')
+        +'<div class="ev-title">'+esc(e.title)+'</div>'
+        +(unames?'<div class="ev-users">👤 '+esc(unames)+'</div>':'')
+        +(e.note?'<div class="ev-note">'+esc(e.note)+'</div>':'')
         +(admin?'<div class="ev-actions">'+shiftBtn+delBtn+'</div>':'')
         +'</div>';
     }).join(''):'<div class="sched-empty">אין אירועים</div>';
-    return '<div class="sday"><div class="sdayh"><span>'+day+'</span>'
+    var isToday=day===tdy;
+    return '<div class="sday'+(isToday?' today':'')+'"><div class="sdayh"><span>'
+      +(isToday?'<span class="today-badge">היום</span>':'')+day+'</span>'
       +(admin?'<button class="btn sm" onclick="openAddEventDay(\''+day+'\')">+</button>':'')
       +'</div><div class="sevents">'+evHtml+'</div></div>';
   }).join('');
@@ -735,16 +746,18 @@ function buildMySchedule(){
   if(G.me&&G.me.guest){c.innerHTML='<p style="color:var(--mu);font-size:13px">אורח — אין לו"ז אישי</p>';return;}
   var myEvs=[];
   var html='';
+  var tdy=todayName();
   DAYS.forEach(function(day){
     var evs=getSortedEvents(day).filter(function(item){return isMyEvent(item.ev);});
     if(!evs.length)return;
     evs.forEach(function(item){myEvs.push({day:day,ev:item.ev});});
-    html+='<div style="margin-bottom:10px"><div style="font-size:12px;font-weight:600;color:var(--ac);margin-bottom:5px">'+day+'</div>';
+    var isToday=day===tdy;
+    html+='<div style="margin-bottom:10px"><div style="font-size:12px;font-weight:600;color:'+(isToday?'#fff':'var(--ac)')+';margin-bottom:5px">'+(isToday?'<span class="today-badge">היום</span>':'')+day+'</div>';
     html+=evs.map(function(item){var e=item.ev;
       return '<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--br)">'
-        +(e.time?'<span style="font-size:11px;color:var(--mu);white-space:nowrap;min-width:50px">'+e.time+'</span>':'')
-        +'<span style="font-size:12px;font-weight:500">'+e.title+'</span>'
-        +(e.note?'<span style="font-size:11px;color:var(--mu)"> · '+e.note+'</span>':'')
+        +(e.time?'<span style="font-size:11px;color:var(--mu);white-space:nowrap;min-width:50px">'+esc(e.time)+'</span>':'')
+        +'<span style="font-size:12px;font-weight:500">'+esc(e.title)+'</span>'
+        +(e.note?'<span style="font-size:11px;color:var(--mu)"> · '+esc(e.note)+'</span>':'')
         +'</div>';
     }).join('');
     html+='</div>';
@@ -831,10 +844,14 @@ function buildNotifs(){
   var items=Object.keys(G.notifs).map(function(k){return Object.assign({id:k},G.notifs[k]);})
     .filter(function(n){return n.uid==='all'||(myUid&&n.uid===myUid);})
     .sort(function(a,b){return b.ts-a.ts}).slice(0,20);
+  // unread badge on the אישי tab
+  var unread=items.filter(function(n){return !n.read;}).length;
+  var nt0=document.getElementById('nt0');
+  if(nt0)nt0.innerHTML='🏠 אישי'+(unread?'<span class="nbadge">'+unread+'</span>':'');
   if(!items.length){c.innerHTML='<p style="color:var(--mu);font-size:13px;padding:8px">אין עדכונים</p>';return;}
   c.innerHTML=items.map(function(n){
     var dt=new Date(n.ts);var ts=dt.getDate()+'/'+(dt.getMonth()+1)+' '+dt.getHours()+':'+('0'+dt.getMinutes()).slice(-2);
-    return '<div class="notif-item"><div class="notif-dot'+(n.read?' read':'')+'"></div><div class="notif-text">'+n.text+'</div><div class="notif-time">'+ts+'</div></div>';
+    return '<div class="notif-item"><div class="notif-dot'+(n.read?' read':'')+'"></div><div class="notif-text">'+esc(n.text)+'</div><div class="notif-time">'+ts+'</div></div>';
   }).join('');
 }
 function markAllRead(){
