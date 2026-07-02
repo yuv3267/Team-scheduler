@@ -64,21 +64,6 @@ main{padding:14px;max-width:1100px;margin:0 auto}
 .btn.sm{padding:5px 12px;font-size:11px}
 .btn.ye{background:var(--ye)}
 .acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
-/* AVAILABILITY */
-.ws{display:none}.ws.on{display:block}
-.wsh{display:flex;align-items:center;gap:9px;margin-bottom:14px}
-.wsn{width:28px;height:28px;background:var(--ac);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-bottom:11px}
-.pc{padding:9px 7px;border-radius:9px;border:2px solid var(--br);background:var(--s2);cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
-.pc.on{border-color:var(--ac);background:rgba(79,142,247,.15)}
-.cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.dr{display:grid;grid-template-columns:85px 1fr;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--br)}
-.dr:last-child{border-bottom:none}
-.avbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.avbtn{padding:10px 4px;border-radius:8px;border:2px solid var(--br);background:var(--s2);color:var(--mu);font-family:'Rubik',sans-serif;font-size:13px;cursor:pointer;font-weight:500;text-align:center;width:100%}
-.avbtn.selected{font-weight:700}
-.av-note{width:100%;margin-top:6px;background:var(--bg);border:1px solid var(--br);border-radius:8px;color:var(--tx);font-family:'Rubik',sans-serif;font-size:13px;padding:7px 10px;outline:none;display:none}
-.av-note.show{display:block}
 /* DUTY / MEDIC */
 .dday{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:14px;margin-bottom:10px}
 .ddayh{font-size:14px;font-weight:600;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--br);color:var(--ac);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -97,14 +82,11 @@ main{padding:14px;max-width:1100px;margin:0 auto}
 .avdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .mi{display:flex;flex-direction:column;flex:1}
 .mr{font-size:11px;color:var(--mu);margin-top:1px}
-.wb2{font-size:10px;background:rgba(231,76,60,.2);color:var(--re);border-radius:4px;padding:1px 6px;margin-top:2px;display:inline-block}
 /* TABLE */
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{background:var(--s2);color:var(--mu);font-weight:600;font-size:10px;padding:8px 9px;text-align:center;border:1px solid var(--br)}
 td{padding:8px 9px;border:1px solid var(--br);text-align:center}
 tr:hover td{background:var(--s2)}
-.b{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
-.bp{background:#1a3d28;color:var(--gr)}.ba{background:#3d2020;color:var(--re)}.bx{background:#3d2e10;color:var(--ye)}.bl{background:#132a45;color:var(--ac)}.be{color:var(--mu)}
 /* MEMBERS */
 .mg{display:grid;gap:9px}
 .mc{background:var(--s2);border:1px solid var(--br);border-radius:10px;padding:13px;display:flex;align-items:center;gap:11px}
@@ -228,9 +210,8 @@ tr:hover td{background:var(--s2)}
     <button class="on" id="nt0" onclick="goTab(0)">🏠 אישי</button>
     <button id="nt1" onclick="goTab(1)">📅 לו"ז</button>
     <button id="nt2" onclick="goTab(2)">🔰 שיבוץ</button>
-    <button id="nt3" onclick="goTab(3)">📋 זמינות</button>
-    <button id="nt4" onclick="goTab(4)">👥 צוות</button>
-    <button id="nt5" onclick="goTab(5)">👁 הכל</button>
+    <button id="nt3" onclick="goTab(3)">👥 צוות</button>
+    <button id="nt4" onclick="goTab(4)">👁 הכל</button>
   </nav>
   <main>
     <!-- PERSONAL -->
@@ -302,36 +283,14 @@ tr:hover td{background:var(--s2)}
       </div>
     </div>
 
-    <!-- AVAILABILITY -->
-    <div class="panel" id="p3">
-      <div class="card">
-        <div class="ctitle">עדכון זמינות</div>
-        <div class="ws on" id="av1">
-          <div class="wsh"><div class="wsn">1</div><div style="font-size:14px;font-weight:600">בחר/י חבר צוות</div></div>
-          <div class="pg" id="PG"></div>
-          <div class="acts"><button class="btn" onclick="startAv()">המשך ←</button></div>
-        </div>
-        <div class="ws" id="av2">
-          <div class="wsh"><div class="wsn">2</div><div><div style="font-size:14px;font-weight:600">זמינות לכל יום</div><div id="AVL" style="font-size:12px;color:var(--mu)"></div></div></div>
-          <div id="ADR"></div>
-          <div class="acts">
-            <button class="btn sec" onclick="backAv()">← חזור</button>
-            <button class="btn" onclick="saveAv()">💾 שמור</button>
-          </div>
-        </div>
-      </div>
-      <div class="card"><div class="ctitle">טבלת זמינות</div><div style="overflow-x:auto"><table><thead><tr id="avH"></tr></thead><tbody id="avB"></tbody></table></div></div>
-    </div>
-
     <!-- MEMBERS -->
-    <div class="panel" id="p4">
+    <div class="panel" id="p3">
       <div class="card"><div class="ctitle">חברי הצוות</div><div class="mg" id="MG"></div></div>
     </div>
 
     <!-- VIEW ALL -->
-    <div class="panel" id="p5">
+    <div class="panel" id="p4">
       <div class="sbar" id="SB"></div>
-      <div class="card"><div class="ctitle">זמינות</div><div style="overflow-x:auto"><table><thead><tr id="vH"></tr></thead><tbody id="vB"></tbody></table></div></div>
       <div class="card"><div class="ctitle">כוננות</div><div style="overflow-x:auto"><table><thead><tr id="vdH"></tr></thead><tbody id="vdB"></tbody></table></div></div>
       <div class="card"><div class="ctitle">חובש תורן</div><div style="overflow-x:auto"><table><thead><tr id="vmH"></tr></thead><tbody id="vmB"></tbody></table></div></div>
     </div>
@@ -358,14 +317,6 @@ tr:hover td{background:var(--s2)}
   <div class="mbox" style="border-color:var(--re)"><h3 style="color:var(--re)">🗑️ מחיקת משתמש</h3>
     <p id="DMT" style="font-size:13px;color:var(--mu);margin-bottom:16px"></p>
     <div class="mbtns"><button class="mbcan" onclick="closeModal('DM')">ביטול</button><button class="mbdel" onclick="doDelete()">מחק</button></div>
-  </div>
-</div>
-<div class="modal" id="WM">
-  <div class="mbox" style="border-color:var(--re)">
-    <div style="text-align:center;font-size:28px;margin-bottom:8px">⚠️</div>
-    <div id="WMT" style="font-size:15px;font-weight:700;color:var(--re);text-align:center;margin-bottom:4px"></div>
-    <p id="WMP" style="font-size:13px;color:var(--mu);text-align:center;margin:8px 0 18px;line-height:1.6"></p>
-    <div class="mbtns"><button class="mbcan" onclick="closeModal('WM')">ביטול</button><button class="mbdel" onclick="forceAssign()">שבץ בכל זאת</button></div>
   </div>
 </div>
 <div class="modal" id="MM">
@@ -421,18 +372,9 @@ var SLOTS=['חובש_1','חובש_2','מנא','מטב'];
 var SLBL={'חובש_1':'חובש 1','חובש_2':'חובש 2','מנא':'מנא','מטב':'מטב'};
 var DEF_MSN={ראשון:'מעצר בחרבתא',שני:'פטרול רגלי',שלישי:'שליפה + חיפוק',רביעי:'שליפה דיר אבו משאל',חמישי:'פטרול רכוב'};
 var RCOL={חובש:'#2ecc71',מנא:'#4f8ef7',מטב:'#f39c12'};
-var AVCOL={base:'#2ecc71',home:'#4f8ef7',other:'#f39c12'};
-var AVOPTS=[
-  {k:'base',l:'בסיס',style:'background:#1a3d28;border-color:#2ecc71;color:#2ecc71'},
-  {k:'home',l:'בית',style:'background:rgba(79,142,247,.15);border-color:#4f8ef7;color:#4f8ef7'},
-  {k:'other',l:'אחר',style:'background:#3d2020;border-color:#e74c3c;color:#e74c3c'}
-];
-function avOptByKey(k){for(var i=0;i<AVOPTS.length;i++){if(AVOPTS[i].k===k)return AVOPTS[i];}return null;}
-var AVNOTE={other:true}; // keys that allow notes
-
-var G={members:{},avail:{},duty:{},medic:{},missions:{},events:{},notifs:{},
-  me:null,selP:null,avSel:{},role:'',adminUnlocked:false,
-  pendingPick:null,deleteUid:'',editRole:'',editMsnDay:'',shiftEid:''};
+var G={members:{},duty:{},medic:{},missions:{},events:{},notifs:{},
+  me:null,role:'',adminUnlocked:false,
+  deleteUid:'',editRole:'',editMsnDay:'',shiftEid:''};
 
 // ── FIREBASE ──
 function fbSet(p,v,cb){setSy('sy','שומר...');db.ref(p).set(v).then(function(){setSy('ok','נשמר ✓');if(cb)cb();}).catch(function(){setSy('er','שגיאה');toast('שגיאת שמירה','#e74c3c');});}
@@ -449,7 +391,6 @@ function listen(){
     document.getElementById('upgBtn').style.display=(!G.me||G.me.guest||isAdmin())?'none':'';
     renderAll();
   });
-  db.ref('avail').on('value',function(s){G.avail=s.val()||{};renderAll();});
   db.ref('duty').on('value',function(s){G.duty=s.val()||{};renderAll();});
   db.ref('medic').on('value',function(s){G.medic=s.val()||{};renderAll();});
   db.ref('missions').on('value',function(s){G.missions=s.val()||{};renderAll();});
@@ -460,14 +401,9 @@ function listen(){
 
 // ── HELPERS ──
 function isAdmin(){return G.me&&!G.me.guest&&G.members[G.me.uid]&&G.members[G.me.uid].admin;}
-function avKey(uid,day){var v=(G.avail[uid]||{})[day];if(!v)return'';return typeof v==='object'?v.k:v;}function avNote(uid,day){var v=(G.avail[uid]||{})[day];return(v&&typeof v==='object')?(v.note||''):'';}
-function avCol(uid,day){return AVCOL[avKey(uid,day)]||'#7880a0';}
-
 function mName(uid){return uid&&G.members[uid]?G.members[uid].name:'—';}
 function getMsn(day){return G.missions[day]||DEF_MSN[day]||'';}
 function assigned(day){var ids=Object.values(G.duty[day]||{}).filter(Boolean);if(G.medic[day])ids.push(G.medic[day]);return ids;}
-function warnReason(uid,day){var k=avKey(uid,day);if(!k)return 'לא הוגדרה זמינות';if(k==='home')return 'בבית';if(k==='other')return 'סיבה אחרת ('+avNote(uid,day)+')';return null;}
-function avBdg(uid,day){var k=avKey(uid,day),note=avNote(uid,day);var labels={base:'בסיס',home:'בית',other:'אחר'};if(!k)return'<span class="be">—</span>';var col={base:'bp',home:'bl',other:'bx'}[k]||'be';return'<span class="b '+col+'">'+(labels[k]||k)+(note?' · '+note:'')+'</span>';}
 function toast(msg,c){var t=document.getElementById('T');t.textContent=msg;t.style.background=c||'var(--gr)';t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
 function openModal(id){document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
@@ -477,7 +413,7 @@ function todayName(){return DAYS[new Date().getDay()];}
 // debounced render — listeners fire in bursts on load
 var _rT=null;
 function renderAll(){if(_rT)clearTimeout(_rT);_rT=setTimeout(_renderAllNow,60);}
-function _renderAllNow(){buildPG();buildDD();buildMD();buildMG();renderAvT();renderDuT();renderMeT();buildMyDuty();buildMySchedule();}
+function _renderAllNow(){buildDD();buildMD();buildMG();renderDuT();renderMeT();buildMyDuty();buildMySchedule();}
 function fillDaySelect(id,val){var s=document.getElementById(id);s.innerHTML=DAYS.map(function(d){return '<option value="'+d+'"'+(d===val?' selected':'')+'>'+d+'</option>';}).join('');}
 
 // ── AUTH ──
@@ -527,7 +463,7 @@ function startApp(){
   document.getElementById('schedAdminBtns').style.display=isAdmin()?'flex':'none';
   listen();goTab(0);
 }
-function goTab(i){for(var j=0;j<6;j++){document.getElementById('nt'+j).classList.remove('on');document.getElementById('p'+j).classList.remove('on');}document.getElementById('nt'+i).classList.add('on');document.getElementById('p'+i).classList.add('on');if(i===5)renderVw();}
+function goTab(i){for(var j=0;j<5;j++){document.getElementById('nt'+j).classList.remove('on');document.getElementById('p'+j).classList.remove('on');}document.getElementById('nt'+i).classList.add('on');document.getElementById('p'+i).classList.add('on');if(i===4)renderVw();}
 
 // ── PROFILE ──
 function openProfile(){var m=G.members[G.me.uid];if(!m)return;document.getElementById('pn').value=m.name;document.getElementById('pp').value=m.phone;document.getElementById('pe').value=m.email||'';G.editRole=m.role;for(var j=0;j<3;j++)document.getElementById('prb'+j).classList.remove('on');var ri={חובש:0,מנא:1,מטב:2}[m.role];if(ri!==undefined)document.getElementById('prb'+ri).classList.add('on');openModal('PM');}
@@ -535,71 +471,24 @@ function pRole(r,i){G.editRole=r;for(var j=0;j<3;j++)document.getElementById('pr
 function saveProfile(){var n=document.getElementById('pn').value.trim(),p=document.getElementById('pp').value.trim(),em=document.getElementById('pe').value.trim();if(!n||!p||!G.editRole){toast('יש למלא שם, טלפון ותפקיד','#e74c3c');return;}var uid=G.me.uid;G.members[uid].name=n;G.members[uid].phone=p;G.members[uid].role=G.editRole;G.members[uid].email=em;G.me.name=n;G.me.role=G.editRole;fbSet('members/'+uid,G.members[uid],function(){document.getElementById('UAV').textContent=n[0];document.getElementById('UAV').style.background=RCOL[G.editRole]||'var(--mu)';document.getElementById('UN').textContent=n+(isAdmin()?' 👑':'');document.getElementById('persName').textContent=n;renderAll();closeModal('PM');toast('✓ פרופיל עודכן');});}
 function doUpgrade(){if(document.getElementById('ucode').value.trim()!==ADMIN_CODE){toast('קוד שגוי','#e74c3c');return;}if(!G.me||G.me.guest){toast('יש להתחבר','#e74c3c');return;}G.members[G.me.uid].admin=true;fbSet('members/'+G.me.uid+'/admin',true,function(){document.getElementById('UN').textContent=G.me.name+' 👑';document.getElementById('nt2').style.display='';document.getElementById('upgBtn').style.display='none';document.getElementById('schedAdminBtns').style.display='flex';closeModal('UM');toast('✓ שודרגת לאדמין!');renderAll();});}
 function confirmDelete(uid){G.deleteUid=uid;document.getElementById('DMT').textContent='האם למחוק את '+G.members[uid].name+'? פעולה זו אינה הפיכה.';openModal('DM');}
-function doDelete(){if(!G.deleteUid)return;db.ref('members/'+G.deleteUid).remove();db.ref('avail/'+G.deleteUid).remove();delete G.members[G.deleteUid];delete G.avail[G.deleteUid];closeModal('DM');renderAll();toast('✓ משתמש נמחק');}
-
-// ── AVAILABILITY ──
-function buildPG(){var g=document.getElementById('PG');if(!g)return;if(G.me.guest){g.innerHTML='<p style="color:var(--mu);font-size:13px;padding:8px">אורחים אינם יכולים לשנות זמינות</p>';return;}var admin=isAdmin(),ks=Object.keys(G.members).filter(function(uid){return admin||uid===G.me.uid;});if(!admin&&ks.length===1&&!G.selP)G.selP=ks[0];g.innerHTML=ks.map(function(uid){var m=G.members[uid];return '<div class="pc'+(G.selP===uid?' on':'')+'" onclick="selPers(\''+uid+'\')">'+'<div class="cdot" style="background:'+avCol(uid,DAYS[0])+'"></div>'+'<span style="font-size:13px;font-weight:500">'+m.name+'</span>'+'<span style="font-size:11px;color:var(--mu)">'+m.role+'</span></div>';}).join('');}
-function selPers(uid){G.selP=uid;buildPG();}
-function startAv(){
-  if(!G.selP){toast('בחר/י חבר צוות','#e74c3c');return;}
-  G.avSel=Object.assign({},(G.avail[G.selP]||{}));
-  document.getElementById('AVL').textContent=G.members[G.selP]?G.members[G.selP].name:'';
-  document.getElementById('ADR').innerHTML=DAYS.map(function(day){
-    var cur=G.avSel[day]||{};
-    var curK=typeof cur==='string'?cur:(cur.k||'');
-    var curNote=typeof cur==='object'?cur.note||'':'';
-    return '<div class="dr" id="dr_'+day+'">'
-      +'<div style="font-size:13px;font-weight:500">'+day+'</div>'
-      +'<div>'
-      +'<div class="avbtns">'+AVOPTS.map(function(o){
-        var sel=curK===o.k;
-        return '<button class="avbtn'+(sel?' selected':'')+'"'+(sel?' style="'+o.style+'"':'')+' onclick="setAvD(\''+day+'\',\''+o.k+'\',this)">'+o.l+'</button>';
-      }).join('')+'</div>'
-      +'<input class="av-note'+(curK==='other'?' show':'')+'" id="avnote_'+day+'" placeholder="הערה..." value="'+curNote+'">'
-      +'</div></div>';
-  }).join('');
-  document.getElementById('av1').classList.remove('on');
-  document.getElementById('av2').classList.add('on');
-}
-function setAvD(day,k,btn){
-  btn.closest('.avbtns').querySelectorAll('.avbtn').forEach(function(b){b.className='avbtn';b.removeAttribute('style');});
-  btn.classList.add('selected');
-  var opt=avOptByKey(k);
-  if(opt)btn.setAttribute('style',opt.style);
-  var noteEl=document.getElementById('avnote_'+day);
-  if(noteEl){if(k==='other'){noteEl.classList.add('show');}else{noteEl.classList.remove('show');noteEl.value='';}}
-  G.avSel[day]=k==='other'?{k:'other',note:''}:k;
-}
-function saveAv(){
-  // collect notes for 'other' days
-  DAYS.forEach(function(day){
-    var noteEl=document.getElementById('avnote_'+day);
-    if(noteEl&&noteEl.classList.contains('show')){G.avSel[day]={k:'other',note:noteEl.value.trim()};}
-  });
-  fbSet('avail/'+G.selP,G.avSel,function(){toast('✓ זמינות נשמרה');backAv();});
-}
-function backAv(){document.getElementById('av2').classList.remove('on');document.getElementById('av1').classList.add('on');}
-function renderAvT(){document.getElementById('avH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('avB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(uid,d)+'</td>';}).join('')+'</tr>';}).join('');}
+function doDelete(){if(!G.deleteUid)return;db.ref('members/'+G.deleteUid).remove();delete G.members[G.deleteUid];closeModal('DM');renderAll();toast('✓ משתמש נמחק');}
 
 // ── PICKER ──
 function allowedRoles(slot){if(slot==='מטב')return['מטב'];if(slot==='מנא')return['מנא'];return['חובש','מנא'];}
 function picker(id,day,cur){
-  var m=cur?G.members[cur]:null,col=cur?avCol(cur,day):'#7880a0';
+  var m=cur?G.members[cur]:null,col=m?(RCOL[m.role]||'#7880a0'):'#7880a0';
   var slot='';if(id.indexOf('du_')===0){var rest=id.slice(3);slot=rest.slice(rest.indexOf('_')+1);}
   var allowed=slot?allowedRoles(slot):Object.keys(RCOL);
   var opts='<div class="mo cl" onclick="doPick(\''+id+'\',\'\',\''+day+'\')">— הסר —</div>';
   opts+=Object.keys(G.members).filter(function(uid){return allowed.indexOf(G.members[uid].role)>=0;}).map(function(uid){
-    var mem=G.members[uid],taken=assigned(day).indexOf(uid)>=0&&uid!==cur,warn=warnReason(uid,day);
-    if(taken)return '<div class="mo dis"><div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">משובץ כבר</span></div></div>';
-    if(warn) return '<div class="mo" onclick="tryPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="wb2">⚠ '+warn+'</span></div></div>';
-    return '<div class="mo" onclick="doPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+avCol(uid,day)+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">'+mem.role+'</span></div></div>';
+    var mem=G.members[uid],taken=assigned(day).indexOf(uid)>=0&&uid!==cur;
+    if(taken)return '<div class="mo dis"><div class="avdot" style="background:'+(RCOL[mem.role]||'#7880a0')+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">משובץ כבר</span></div></div>';
+    return '<div class="mo" onclick="doPick(\''+id+'\',\''+uid+'\',\''+day+'\')">'+'<div class="avdot" style="background:'+(RCOL[mem.role]||'#7880a0')+'"></div><div class="mi"><span>'+mem.name+'</span><span class="mr">'+mem.role+'</span></div></div>';
   }).join('');
   return '<div class="mp"><div class="mdisp'+(cur?' fil':'')+'" onclick="event.stopPropagation();toggleDD(\''+id+'\')">'+'<span>'+(m?m.name:'בחר...')+'</span><div class="avdot" style="background:'+col+'"></div></div>'+'<div class="mdd" id="DD_'+id+'" onclick="event.stopPropagation()">'+opts+'</div></div>';
 }
 function toggleDD(id){var dd=document.getElementById('DD_'+id);if(!dd)return;var was=dd.classList.contains('on');document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});if(!was)dd.classList.add('on');}
 document.addEventListener('click',function(){document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});});
-function tryPick(id,uid,day){document.querySelectorAll('.mdd.on').forEach(function(el){el.classList.remove('on');});G.pendingPick={id:id,uid:uid,day:day};document.getElementById('WMT').textContent=G.members[uid].name+' לא זמין/ה';document.getElementById('WMP').textContent=warnReason(uid,day);openModal('WM');}
-function forceAssign(){if(G.pendingPick)doPick(G.pendingPick.id,G.pendingPick.uid,G.pendingPick.day);closeModal('WM');}
 function doPick(id,uid,day){
   if(id.indexOf('du_')===0){var rest=id.slice(3),di=rest.indexOf('_'),d=rest.slice(0,di),slot=rest.slice(di+1);if(!G.duty[d])G.duty[d]={};if(uid)G.duty[d][slot]=uid;else delete G.duty[d][slot];fbSet('duty/'+d,G.duty[d]||null);buildDD();renderDuT();}
   else{var d=id.slice(3);if(uid)G.medic[d]=uid;else delete G.medic[d];fbSet('medic/'+d,uid||null);buildMD();renderMeT();}
@@ -869,7 +758,14 @@ function markAllRead(){
 function buildMG(){var g=document.getElementById('MG');if(!g)return;var ks=Object.keys(G.members);var admin=isAdmin();g.innerHTML=ks.length?ks.map(function(uid){var m=G.members[uid],col=RCOL[m.role]||'var(--ac)';var isSelf=uid===G.me.uid;return '<div class="mc"><div class="mav2" style="background:'+col+'">'+m.name[0]+'</div><div style="flex:1"><div style="font-size:13px;font-weight:600">'+m.name+(m.admin?' 👑':'')+'</div><div style="font-size:11px;color:var(--mu);margin-top:2px">'+m.phone+' · מ"א '+m.id+'</div><div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;background:'+col+'22;color:'+col+'">'+m.role+'</span>'+(isSelf?'<button style="padding:4px 10px;border-radius:6px;border:1px solid var(--ac);background:transparent;color:var(--ac);font-family:\'Rubik\',sans-serif;font-size:11px;cursor:pointer" onclick="openProfile()">✏️ ערוך</button>':'')+(admin&&!isSelf?'<button class="del-btn" onclick="confirmDelete(\''+uid+'\')">🗑️ מחק</button>':'')+'</div></div></div>';}).join(''):'<p style="color:var(--mu);text-align:center;padding:20px;font-size:13px">אין חברי צוות</p>';}
 
 // ── VIEW ALL ──
-function renderVw(){var mc=Object.keys(G.members).length,ac=Object.values(G.avail).reduce(function(s,r){return s+Object.values(r).filter(function(v){return v==='base';}).length;},0);document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div><div class="sb2"><div class="sv">'+ac+'</div><div class="sl2">ימי זמינות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';document.getElementById('vH').innerHTML='<th>שם</th><th>תפקיד</th>'+DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vB').innerHTML=Object.keys(G.members).map(function(uid){var m=G.members[uid],r=G.avail[uid]||{};return '<tr><td style="font-weight:600;text-align:right">'+m.name+'</td><td>'+m.role+'</td>'+DAYS.map(function(d){return '<td>'+avBdg(uid,d)+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';}
+function renderVw(){
+  var mc=Object.keys(G.members).length;
+  document.getElementById('SB').innerHTML='<div class="sb2"><div class="sv">'+mc+'</div><div class="sl2">חברי צוות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.duty[d]&&Object.keys(G.duty[d]).length;}).length+'/7</div><div class="sl2">כוננות</div></div><div class="sb2"><div class="sv">'+DAYS.filter(function(d){return G.medic[d];}).length+'/7</div><div class="sl2">חובש תורן</div></div>';
+  document.getElementById('vdH').innerHTML='<th>יום</th>'+SLOTS.map(function(s){return '<th>'+SLBL[s]+'</th>';}).join('');
+  document.getElementById('vdB').innerHTML=DAYS.map(function(day){var d=G.duty[day]||{};return '<tr><td style="font-weight:600">'+day+'</td>'+SLOTS.map(function(s){return '<td>'+mName(d[s])+'</td>';}).join('')+'</tr>';}).join('');
+  document.getElementById('vmH').innerHTML=DAYS.map(function(d){return '<th>'+d+'</th>';}).join('');
+  document.getElementById('vmB').innerHTML='<tr>'+DAYS.map(function(d){return '<td style="font-weight:600">'+mName(G.medic[d])+'</td>';}).join('')+'</tr>';
+}
 
 checkAutoLogin();
 </script>
